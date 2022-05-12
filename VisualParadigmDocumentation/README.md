@@ -1,0 +1,1 @@
+This section of the repository is used to save an offsite backup of the project documentation. Here you will find Visual Paradigm files that store the Class Diagram, the Component Diagram and other project schemas.
