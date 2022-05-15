@@ -2,22 +2,29 @@
 
 namespace app\controllers;
 
+use app\models\LogopedistaModel;
 use Yii;
 use yii\web\Controller;
-use app\models\FormRegistrazione;
 
 class LogopedistaController extends Controller
 {
     public function actionRegistrazione(){
-        $model = new FormRegistrazione();
+        $model = new LogopedistaModel();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate())
-        {
-            if ($model->registraLogopedista()){
-                return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                    'message' => $model->nome.' '.$model->cognome
-                ]);
+        try {
+            if ($model->load(Yii::$app->request->post())) {
+                // cripta la password con md5
+                $model->passwordD = md5($model->passwordD);
+
+                // esegue l'inserimento dati nel database sfruttando l'active record
+                if ( $model->insert()) {
+                    return $this->render('@app/views/logopedista/dashboardlogopedista', [
+                        'message' => $model->nome . ' ' . $model->cognome
+                    ]);
+                }
             }
+        } catch (\Exception $e) {
+            Yii::error($e->getMessage());
         }
 
         // view rendering

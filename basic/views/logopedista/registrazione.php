@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 // parametri della VIEW in cui inserire anche il model
 /* @var $this yii\web\View */
 /* @var $form ActiveForm */
-/* @var $model app\models\FormRegistrazione*/
+/* @var $model app\models\LogopedistaModel*/
 ?>
 
 <div class="Registrazione">
@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 
                 <?= $form->field($model, 'email') ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'passwordD')->passwordInput() ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>

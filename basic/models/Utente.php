@@ -8,7 +8,7 @@ class Utente extends AbstractPersona
 
     public function __construct($nome, $cognome, $dataNascita, $email, $password, $idUtente){
         parent::__construct($nome, $cognome, $dataNascita, $email, $password);
-        $this->idLogopedista = $idUtente;
+        $this->idUtente = $idUtente;
     }
 
     /**
