@@ -1,0 +1,39 @@
+CREATE DATABASE IF NOT EXISTS yii2basic;
+USE yii2basic;
+
+CREATE TABLE IF NOT EXISTS logopedista (
+  nome CHAR(60) NOT NULL,
+  cognome CHAR(60) NOT NULL,
+  dataNascita DATE NOT NULL,
+  email CHAR(255) NOT NULL PRIMARY KEY,
+  passwordD CHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS caregiver (
+  nome CHAR(60) NOT NULL,
+  cognome CHAR(60) NOT NULL,
+  dataNascita DATE NOT NULL,
+  email CHAR(255) NOT NULL PRIMARY KEY,
+  passwordD CHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS utente (
+  username CHAR(60) PRIMARY KEY,
+  nome CHAR(60) NOT NULL,
+  cognome CHAR(60) NOT NULL,
+  dataNascita DATE NOT NULL,
+  email CHAR(255) NOT NULL,
+  passwordD CHAR(255) NOT NULL,
+  logopedista CHAR(255) NOT NULL,
+  caregiver CHAR(255) NULL DEFAULT NULL,
+  FOREIGN KEY (logopedista) REFERENCES logopedista(email),
+  FOREIGN KEY (caregiver) REFERENCES caregiver(email)
+);
+
+SELECT * FROM logopedista;
+SELECT * FROM caregiver;
+SELECT * FROM utente;
+
+#DROP TABLE logopedista;
+#DROP TABLE caregiver;
+#DROP TABLE utente;
