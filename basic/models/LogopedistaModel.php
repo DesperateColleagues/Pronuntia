@@ -33,6 +33,7 @@ class LogopedistaModel extends \yii\db\ActiveRecord
             [['dataNascita'], 'safe'],
             [['nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['email'], 'unique'],
         ];
     }
@@ -45,7 +46,7 @@ class LogopedistaModel extends \yii\db\ActiveRecord
         return [
             'nome' => 'Nome',
             'cognome' => 'Cognome',
-            'dataNascita' => 'Data Nascita',
+            'dataNascita' => 'Data di nascita',
             'email' => 'Email',
             'passwordD' => 'Password',
         ];

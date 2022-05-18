@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
             <h2>Registrazione logopedista</h2>
 
             <p>
-                <?php $form = ActiveForm::begin(['id' => 'contact-form']); ?>
+                <?php $form = ActiveForm::begin(['id' => 'reg-form']);?>
 
                 <?= $form->field($model, 'nome')?>
 

@@ -67,7 +67,7 @@ class UtenteModel extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCaregiver0()
+    public function getCaregiverModel()
     {
         return $this->hasOne(CaregiverModel::className(), ['email' => 'caregiver']);
     }
@@ -77,7 +77,7 @@ class UtenteModel extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLogopedista0()
+    public function getLogopedistaModel()
     {
         return $this->hasOne(LogopedistaModel::className(), ['email' => 'logopedista']);
     }
