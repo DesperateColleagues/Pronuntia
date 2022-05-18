@@ -17,7 +17,8 @@ class LogopedistaController extends Controller
                 $model->passwordD = md5($model->passwordD);
 
                 // esegue l'inserimento dati nel database sfruttando l'active record
-                if ( $model->insert()) {
+                if ($model->insert()) {
+                    $this->layout = 'base';
                     return $this->render('@app/views/logopedista/dashboardlogopedista', [
                         'message' => $model->nome . ' ' . $model->cognome
                     ]);

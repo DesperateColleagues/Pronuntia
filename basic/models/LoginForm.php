@@ -2,10 +2,8 @@
 
 namespace app\models;
 
-use phpDocumentor\Reflection\Types\True_;
 use Yii;
 use yii\base\Model;
-
 
 class LoginForm extends Model
 {

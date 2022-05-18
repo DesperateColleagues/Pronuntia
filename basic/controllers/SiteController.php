@@ -13,6 +13,8 @@ use app\models\EntryForm;
 
 class SiteController extends Controller
 {
+    public $layout = 'main';
+
     /**
      * {@inheritdoc}
      */
@@ -55,14 +57,6 @@ class SiteController extends Controller
         ];
     }
 
-    /*public function actionRegistrazione(){
-        $model = new FormRegistrazione();
-
-        return $this->render('registrazione', [
-            'model' => $model
-        ]);
-    }*/
-
     /**
      * Displays homepage.
      *
@@ -80,13 +74,11 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        /*if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }*/
 
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            $this->layout = 'base';
             return $this->render('@app/views/logopedista/dashboardlogopedista', [
                 'message' => $model->email
             ]);
