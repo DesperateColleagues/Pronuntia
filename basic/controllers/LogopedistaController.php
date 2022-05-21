@@ -2,35 +2,44 @@
 
 namespace app\controllers;
 
+use app\models\LoginForm;
 use app\models\LogopedistaModel;
 use Yii;
 use yii\web\Controller;
 
 class LogopedistaController extends Controller
 {
-    public function actionRegistrazione(){
-        $model = new LogopedistaModel();
+
+    public function actionRegistrazione($tipoAttore = 'log'){
 
         try {
-            if ($model->load(Yii::$app->request->post())) {
-                // cripta la password con md5
-                $model->passwordD = md5($model->passwordD);
-
+                $account = new FacadeAccount($tipoAttore);
                 // esegue l'inserimento dati nel database sfruttando l'active record
-                if ($model->insert()) {
-                    $this->layout = 'base';
-                    return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                        'message' => $model->nome . ' ' . $model->cognome
-                    ]);
+                $res = $account->registrazione(Yii::$app->request->post());
+                if ($res) {
+                    Yii::info("Positivo");
+                    if ($tipoAttore == 'log') {
+                        return $this->render('@app/views/site/login', [
+                            'model' => new LoginForm()
+                        ]);
+                    } else if ($tipoAttore == 'car') {
+                        // todo implementazione utente non autonomo
+                    } else {
+                        $this->layout = 'base';
+                        return $this->render('@app/views/logopedista/dashboardlogopedista', [
+                            'message' => 'Dashboard logopedista'
+                        ]);
+                    }
                 }
-            }
         } catch (\Exception $e) {
             Yii::error($e->getMessage());
         }
 
         // view rendering
         return $this->render('registrazione', [
-            'model' => $model
+            'attore' => $tipoAttore,
+            'email' => null
         ]);
     }
+
 }

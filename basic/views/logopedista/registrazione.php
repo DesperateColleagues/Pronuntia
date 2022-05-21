@@ -6,7 +6,13 @@ use yii\widgets\ActiveForm;
 // parametri della VIEW in cui inserire anche il model
 /* @var $this yii\web\View */
 /* @var $form ActiveForm */
-/* @var $model app\models\LogopedistaModel*/
+/* @var $email*/
+/* @var $attore*/
+
+const UTENTE_NON_AUTONOMO = 'utn';
+const UTENTE_AUTONOMO = 'uta';
+const CAREGIVER = 'car';
+// todo: implementare registrazione autente autonomo e caregiver
 ?>
 
 <div class="Registrazione">
@@ -14,28 +20,35 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col-lg-5">
 
-            <h2>Registrazione logopedista</h2>
+            <h2>Registrazione</h2>
 
             <p>
-                <?php $form = ActiveForm::begin(['id' => 'reg-form']);?>
+                <?php
+                $model = new \app\models\LogopedistaModel();
+                $form = ActiveForm::begin(['id' => 'contact-form']);
+                $fieldUsername = null;
+                $hiddenFieldEmail = null;
 
-                <?= $form->field($model, 'nome')?>
+                if ($attore == UTENTE_AUTONOMO) {
+                    $model = new \app\models\UtenteModel();
+                    $fieldUsername = $form->field($model, 'username');
+                    $hiddenFieldEmail = $form->field($model, 'logopedista')->hiddenInput(['value' => $email])->label(false);
+                }
+                else if ($attore == CAREGIVER)
+                    $model = new \app\models\CaregiverModel();
 
-                <?= $form->field($model, 'cognome') ?>
+                echo $form->field($model, 'nome');
+                echo $form->field($model, 'cognome');
+                echo $form->field($model, 'dataNascita');
+                echo $form->field($model, 'email');
+                echo $fieldUsername;
+                echo $hiddenFieldEmail;
+                echo $form->field($model, 'passwordD')->passwordInput();
+            echo '<div class="form-group">';
+                 echo Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
+            echo '</div>';
 
-                <?= $form->field($model, 'dataNascita') ?>
-
-                <?= $form->field($model, 'email') ?>
-
-                <?= $form->field($model, 'passwordD')->passwordInput() ?>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']) ?>
-                </div>
-
-                <?php ActiveForm::end(); ?>
+            ActiveForm::end(); ?>
             </p>
-
-        </div>
 
 </div><!-- Registrazione -->
