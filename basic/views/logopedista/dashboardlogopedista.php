@@ -5,8 +5,10 @@
 /** @var $message */
 
 use yii\bootstrap4\ActiveForm;
-use yii\bootstrap4\Html;?>
+use yii\bootstrap4\Html;
 
+$this->params['message'][] = 'About Us';
+?>
 
 <h1> Benvenuto <?php echo $message?> </h1>
 
