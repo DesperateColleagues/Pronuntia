@@ -6,6 +6,7 @@ use app\models\CaregiverModel;
 use app\models\LogopedistaModel;
 use app\models\UtenteModel;
 use Exception;
+use Yii;
 
 class FacadeAccount
 {
@@ -35,6 +36,8 @@ class FacadeAccount
      */
     public function registrazione($regParam) {
         $model = $this->istanziaModel();
+
+        Yii::error($regParam);
 
             if ($model->load($regParam))
                 $model->passwordD = md5($model->passwordD);

@@ -7,13 +7,13 @@ use yii\base\Model;
 
 class FormRegistrazione extends Model
 {
-    public $logopedisa;
+    public $logopedista;
     public $utente;
     public $caregiver;
 
     public function __construct(){
         parent::__construct();
-        $this->logopedisa = new LogopedistaModel();
+        $this->logopedista = new LogopedistaModel();
     }
 
     const SCENARIO_LOGOPEDISTA = 'logopedista';
@@ -22,8 +22,8 @@ class FormRegistrazione extends Model
 
     public function registraLogopedista(){
         $sql = "INSERT INTO logopedista (nome, cognome, dataNascita, email, passwordD)
-                    VALUES ('".$this->logopedisa->nome."','".$this->logopedisa->cognome."','".$this->logopedisa->dataNascita."',
-                    '".$this->logopedisa->email."','".md5($this->logopedisa->password)."')";
+                    VALUES ('".$this->logopedista->nome."','".$this->logopedista->cognome."','".$this->logopedista->dataNascita."',
+                    '".$this->logopedista->email."','".md5($this->logopedista->password)."')";
 
         $columnCount = Yii::$app->db->createCommand($sql)->execute();
 
