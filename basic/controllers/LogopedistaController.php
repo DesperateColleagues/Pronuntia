@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\CaregiverModel;
 use app\models\LoginForm;
+use app\models\FormRegistrazione;
 use Yii;
 use yii\web\Controller;
 
@@ -19,11 +21,16 @@ class LogopedistaController extends Controller
 
                 if ($res) {
                     if ($tipoAttore == 'log') {
-                        return $this->render('@app/views/site/login', [
+                        return $this->render('@app/views/site/index', [
                             'model' => new LoginForm()
                         ]);
                     } else if ($tipoAttore == 'car') {
-                        // todo implementazione utente non autonomo
+                        $this->layout = 'plain';
+                        $tipoAttore = 'utn';
+                        $email = Yii::$app->request->post('CaregiverModel')['email'];
+                        return $this->render('registrazione', [ 'caregiverEmail' => $email,
+                            'attore' => $tipoAttore,
+                        ]);
                     } else {
                         $this->layout = 'base';
                         return $this->render('@app/views/logopedista/dashboardlogopedista', [
@@ -38,7 +45,7 @@ class LogopedistaController extends Controller
 
         // default view rendering
             return $this->render('registrazione', [
-                'attore' => $tipoAttore,
+                'attore' => $tipoAttore, 'caregiverEmail' => null,
             ]);
     }
 
