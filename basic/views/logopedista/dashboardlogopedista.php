@@ -2,16 +2,17 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap4\ActiveForm $form */
-/** @var $message */
 
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
-
-$this->params['message'][] = 'About Us';
 ?>
 
-<h1> Benvenuto <?php echo $message?> </h1>
+<h1> Benvenuto </h1>
 
 <div class="form-group">
     <?= Html::submitButton('Registra assistito', ['class' => 'btn btn-primary', 'name' => 'reg-button']) ?>
+    <?php
+        echo "<br>Dati del logopedista loggato: ".Yii::$app->user->getId();
+    ?>
+
 </div>

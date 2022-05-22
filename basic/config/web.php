@@ -21,7 +21,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\LogopedistaModel',
+            'enableSession' => true,
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -43,7 +44,7 @@ $config = [
                 ],
             ],
         ],
-        
+
         'db' => $db,
         
         'urlManager' => [

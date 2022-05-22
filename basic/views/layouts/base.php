@@ -34,8 +34,8 @@ AppAsset::register($this);
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
         ],
     ]);
+
     try {
-        Yii::error($this->params['message']);
         echo Nav::widget([
             'items' => [
                 [

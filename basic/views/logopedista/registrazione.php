@@ -6,13 +6,13 @@ use yii\widgets\ActiveForm;
 // parametri della VIEW in cui inserire anche il model
 /* @var $this yii\web\View */
 /* @var $form ActiveForm */
-/* @var $email*/
 /* @var $attore*/
 
 const UTENTE_NON_AUTONOMO = 'utn';
 const UTENTE_AUTONOMO = 'uta';
 const CAREGIVER = 'car';
 // todo: implementare registrazione autente autonomo e caregiver
+
 ?>
 
 <div class="Registrazione">
@@ -30,9 +30,12 @@ const CAREGIVER = 'car';
                 $hiddenFieldEmail = null;
 
                 if ($attore == UTENTE_AUTONOMO) {
+                    $logopedistaEmail = Yii::$app->user->getId();
+                    Yii::info(Yii::$app->user->getId());
                     $model = new \app\models\UtenteModel();
                     $fieldUsername = $form->field($model, 'username');
-                    $hiddenFieldEmail = $form->field($model, 'logopedista')->hiddenInput(['value' => $email])->label(false);
+                    $hiddenFieldEmail = $form->field($model, 'logopedista')
+                        ->hiddenInput(['value' => $logopedistaEmail])->label(false);
                 }
                 else if ($attore == CAREGIVER)
                     $model = new \app\models\CaregiverModel();

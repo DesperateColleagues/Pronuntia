@@ -11,7 +11,11 @@ class FacadeAccount
 {
     private $tipoAttore;
 
-    public function __construct($tipoAttore) {
+    /**
+     * @param mixed $tipoAttore
+     */
+    public function setTipoAttore($tipoAttore)
+    {
         $this->tipoAttore = $tipoAttore;
     }
 
@@ -36,6 +40,10 @@ class FacadeAccount
                 $model->passwordD = md5($model->passwordD);
 
         return $model->insert();
+    }
+
+    public function accesso($logParam){
+        // todo: gestire accesso multiplo con identità
     }
 
 }
