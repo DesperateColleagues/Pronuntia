@@ -3,21 +3,21 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
-use app\models\LogopedistaModel;
 use Yii;
 use yii\web\Controller;
 
 class LogopedistaController extends Controller
 {
+    //private $account;
 
     public function actionRegistrazione($tipoAttore = 'log'){
-
         try {
-                $account = new FacadeAccount($tipoAttore);
+                $account = new FacadeAccount();
+                $account->setTipoAttore($tipoAttore);
                 // esegue l'inserimento dati nel database sfruttando l'active record
                 $res = $account->registrazione(Yii::$app->request->post());
+
                 if ($res) {
-                    Yii::info("Positivo");
                     if ($tipoAttore == 'log') {
                         return $this->render('@app/views/site/login', [
                             'model' => new LoginForm()
@@ -27,19 +27,23 @@ class LogopedistaController extends Controller
                     } else {
                         $this->layout = 'base';
                         return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                            'message' => 'Dashboard logopedista'
-                        ]);
+                        ]); /*$this->actionDashboardlogopedista();*/
                     }
+                } else {
+                    Yii::error($res);
                 }
         } catch (\Exception $e) {
             Yii::error($e->getMessage());
         }
 
-        // view rendering
-        return $this->render('registrazione', [
-            'attore' => $tipoAttore,
-            'email' => null
-        ]);
+        // default view rendering
+            return $this->render('registrazione', [
+                'attore' => $tipoAttore,
+            ]);
+    }
+
+    public function actionDashboardlogopedista () {
+        return $this->render('dashboardlogopedista');
     }
 
 }

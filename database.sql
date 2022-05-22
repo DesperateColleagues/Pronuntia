@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS logopedista (
   cognome CHAR(60) NOT NULL,
   dataNascita DATE NOT NULL,
   email CHAR(255) NOT NULL PRIMARY KEY,
-  passwordD CHAR(255) NOT NULL
+  passwordD CHAR(255) NOT NULL,
+  authKey CHAR(50) DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS caregiver (
@@ -34,6 +35,6 @@ SELECT * FROM logopedista;
 SELECT * FROM caregiver;
 SELECT * FROM utente;
 
-#DROP TABLE logopedista;
-#DROP TABLE caregiver;
-#DROP TABLE utente;
+/*DROP TABLE utente;
+DROP TABLE caregiver;
+DROP TABLE logopedista;*/

@@ -11,7 +11,7 @@ $this->title = 'My Yii Application';
 
         <p class="lead">Progettato da Desperate Colleagues per rendere facile e immediata la tua attività di logopedia</p>
 
-        <p><a class="btn btn-lg btn-success" href="logopedista\registrazione">Registrati o accedi per iniziare</a></p>
+        <p><a class="btn btn-lg btn-success" href="\logopedista\registrazione">Registrati o accedi per iniziare</a></p>
     </div>
 
     <div class="body-content">

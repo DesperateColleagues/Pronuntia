@@ -11,6 +11,8 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
+    private $_user = false;
+
     /**
      * @return array the validation rules.
      */
@@ -21,21 +23,36 @@ class LoginForm extends Model
             [['email', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            ['email', 'email']
+            ['email', 'email'],
             // password is validated by validatePassword()
-            //['password', 'validatePassword'],
+            ['password', 'validatePassword']
         ];
     }
 
     public function login() {
-        $resultRow = LogopedistaModel::find()
-            ->where(['email' => $this->email, 'passwordD' => md5($this->password)])
-            ->one();
+        if ($this->validate()){
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
+        }
 
-        if($resultRow)
-            return true;
-        else
-            return false;
+        return false;
+    }
+
+    public function getUser(){
+        if ($this->_user === false){
+            $this->_user = LogopedistaModel::findByEmail($this->email);
+        }
+
+        return $this->_user;
+    }
+
+    public function validatePassword($attribute, $params){
+        if (!$this->hasErrors()){
+            $user = $this->getUser();
+
+            if (!$user || !$user->validatePassword($this->password)){
+                $this->addError($attribute, 'Email e password non corretti');
+            }
+        }
     }
 
 }

@@ -80,8 +80,10 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $this->layout = 'base';
             return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                'message' => $model->email
+                'email' => $model->email
             ]);
+
+            //Yii::info($model->getUser()['nome']);
         }
 
         //$model->password = '';
