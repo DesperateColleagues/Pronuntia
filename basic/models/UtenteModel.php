@@ -39,6 +39,7 @@ class UtenteModel extends \yii\db\ActiveRecord
             [['dataNascita'], 'safe'],
             [['username', 'nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD', 'logopedista', 'caregiver'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['username'], 'unique'],
             [['logopedista'], 'exist', 'skipOnError' => true, 'targetClass' => LogopedistaModel::className(), 'targetAttribute' => ['logopedista' => 'email']],
             [['caregiver'], 'exist', 'skipOnError' => true, 'targetClass' => CaregiverModel::className(), 'targetAttribute' => ['caregiver' => 'email']],

@@ -36,6 +36,7 @@ class CaregiverModel extends ActiveRecord
             [['nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD'], 'string', 'max' => 255],
             [['email'], 'unique'],
+            [['email'], 'email'],
         ];
     }
 

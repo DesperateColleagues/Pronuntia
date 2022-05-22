@@ -14,10 +14,15 @@ class LogopedistaController extends Controller
 
     public function actionRegistrazione($tipoAttore = 'log'){
         try {
+            $post = Yii::$app->request->post();
+
+            if (array_key_exists('UtenteModel', $post))
+                $tipoAttore = 'utn';
+
                 $account = new FacadeAccount();
                 $account->setTipoAttore($tipoAttore);
                 // esegue l'inserimento dati nel database sfruttando l'active record
-                $res = $account->registrazione(Yii::$app->request->post());
+                $res = $account->registrazione($post);
 
                 if ($res) {
                     if ($tipoAttore == 'log') {

@@ -9,9 +9,18 @@ use yii\widgets\ActiveForm;
 /* @var $form ActiveForm */
 /* @var $attore*/
 
+$UTENTE_NON_AUTONOMO = 'utn';
+$UTENTE_AUTONOMO = 'uta';
+$CAREGIVER = 'car';
+$echoPar = 'Logopedista';
 
 // todo: implementare registrazione autente autonomo e caregiver
-
+if ($attore == $UTENTE_AUTONOMO)
+    $echoPar = 'Utente autonomo';
+else if ($attore == $UTENTE_NON_AUTONOMO)
+    $echoPar = 'Utente non autonomo'.'<br>'.'caregiver: '.$caregiverEmail;
+else if ($attore == $CAREGIVER)
+    $echoPar = 'Caregiver';
 ?>
 
 <div class="Registrazione">
@@ -19,15 +28,11 @@ use yii\widgets\ActiveForm;
     <div class="row">
         <div class="col-lg-5">
 
-            <h2>Registrazione</h2>
+            <h2> Registrazione </h2>
+            <h3> <?php echo $echoPar?> </h3>
 
             <p>
                 <?php
-
-                $UTENTE_NON_AUTONOMO = 'utn';
-                $UTENTE_AUTONOMO = 'uta';
-                $CAREGIVER = 'car';
-
                 $model = new \app\models\LogopedistaModel();
                 $form = ActiveForm::begin(['id' => 'contact-form']);
                 $fieldUsername = null;
