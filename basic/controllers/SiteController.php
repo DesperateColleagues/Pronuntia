@@ -70,7 +70,7 @@ class SiteController extends Controller
     /**
      * Login action.
      *
-     * @return Response|string
+     * @return string
      */
     public function actionLogin()
     {
@@ -79,14 +79,9 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $this->layout = 'base';
-            return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                'email' => $model->email
-            ]);
-
-            //Yii::info($model->getUser()['nome']);
+            return $this->render('@app/views/logopedista/dashboardlogopedista');
         }
 
-        //$model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);

@@ -7,19 +7,24 @@ use app\models\LogopedistaModel;
 use app\models\UtenteModel;
 use Exception;
 use Yii;
+use yii\base\Model;
 
 class FacadeAccount
 {
     private $tipoAttore;
 
     /**
-     * @param mixed $tipoAttore
+     * @param string $tipoAttore
      */
     public function setTipoAttore($tipoAttore)
     {
         $this->tipoAttore = $tipoAttore;
     }
 
+    /**
+     * Questo metodo permette di istanziare un model a seconda del tipo di attore
+     * @return Model $model
+    */
     private function istanziaModel(){
         if ($this->tipoAttore == 'log')
             $model = new LogopedistaModel();
@@ -32,12 +37,15 @@ class FacadeAccount
     }
 
     /**
+     * Effettua la registrazione al sistema di un attore.
+     * @param array $regParam:  array associativo con i parametri della registrazione. Solitamente corrisponde a
+     *                          $_POST[] array
+     *
+     * @return bool             indica se la registrazione è andata a buon fine
      * @throws Exception
      */
     public function registrazione($regParam) {
         $model = $this->istanziaModel();
-
-        Yii::error($regParam);
 
             if ($model->load($regParam))
                 $model->passwordD = md5($model->passwordD);
