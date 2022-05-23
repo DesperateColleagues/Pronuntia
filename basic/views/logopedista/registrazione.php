@@ -5,22 +5,24 @@ use yii\widgets\ActiveForm;
 
 // parametri della VIEW in cui inserire anche il model
 /* @var $this yii\web\View */
-/* @var $caregiverEmail */
 /* @var $form ActiveForm */
-/* @var $attore*/
+/* @var $attore*/ // tipo di attore di cui si sta effettuando la registrazione
+/* @var $caregiverEmail */ // valorizzata SOLO quando si sta registrando l'utente non autonomo
 
+// costanti da confrontare con il valore di $attore
 $UTENTE_NON_AUTONOMO = 'utn';
 $UTENTE_AUTONOMO = 'uta';
 $CAREGIVER = 'car';
-$echoPar = 'Logopedista';
 
-// todo: implementare registrazione autente autonomo e caregiver
+$titolo = 'Logopedista';
+
+// imposta un titolo alla schermata di registrazione
 if ($attore == $UTENTE_AUTONOMO)
-    $echoPar = 'Utente autonomo';
+    $titolo = 'Utente autonomo';
 else if ($attore == $UTENTE_NON_AUTONOMO)
-    $echoPar = 'Utente non autonomo'.'<br>'.'caregiver: '.$caregiverEmail;
+    $titolo = 'Utente non autonomo'.'<br>'.'caregiver: '.$caregiverEmail;
 else if ($attore == $CAREGIVER)
-    $echoPar = 'Caregiver';
+    $titolo = 'Caregiver';
 ?>
 
 <div class="Registrazione">
@@ -29,53 +31,79 @@ else if ($attore == $CAREGIVER)
         <div class="col-lg-5">
 
             <h2> Registrazione </h2>
-            <h3> <?php echo $echoPar?> </h3>
+            <h5> <?php echo $titolo?> </h5>
 
             <p>
+                <!-- Costruzione del form !-->
+
                 <?php
-                $model = new \app\models\LogopedistaModel();
-                $form = ActiveForm::begin(['id' => 'contact-form']);
+                $form = ActiveForm::begin(['id' => 'contact-form']); // inizia la costruzione dell'active form
+
+                /**
+                 * Campi variabili: i seguenti campi sono presenti nel form a seconda dell'attore che si sta regitrando
+                 * 1) $fieldUsername:   username dell'utente. Questo campo è mostrato solo se $attore = $UTENTE_AUTONOMO
+                 *                      o $attore = $UTENTE_NON_AUTONOMO
+                 *
+                 * 2) $$hiddenFieldLogopedista: campo nascosto. Conterrà la mail del logopedista.
+                 *                              Questo campo è valorizzato solo se si registra un utente
+                 *
+                 * 3) $hiddenFieldCaregiver:    campo nascosto. Conterrà la mail del caregiver.
+                 *                              Questo campo è valorizzato solo se si registra un utente non autonomo
+                */
                 $fieldUsername = null;
                 $hiddenFieldLogopedista = null;
                 $hiddenFieldCaregiver = null;
 
+                /**
+                 * In questi rami if, in base all'attore che si sta registrando:
+                 *  - Si istanzia lo specifico model da usare nel form
+                 *  - Per gli utenti, a seconda del tipo, si valorizzano i campi variabili e si istanzia il
+                 *    relativo model
+                */
                 if ($attore == $UTENTE_AUTONOMO) {
-                    $logopedistaEmail = Yii::$app->user->getId();
-                    Yii::error(Yii::$app->user->getId());
                     $model = new \app\models\UtenteModel();
+
+                    // l'email del logopedista è recuperata della proprietà user di $app
+                    $logopedistaEmail = Yii::$app->user->getId();
+
                     $fieldUsername = $form->field($model, 'username');
+
                     $hiddenFieldLogopedista = $form->field($model, 'logopedista')
                         ->hiddenInput(['value' => $logopedistaEmail])->label(false);
-                }
-                else if ($attore == $CAREGIVER) {
-                    $model = new \app\models\CaregiverModel();
-                }
-                else if ($attore == $UTENTE_NON_AUTONOMO) {
-                    $logopedistaEmail = Yii::$app->user->getId();
+                } else if ($attore == $UTENTE_NON_AUTONOMO) {
                     $model = new \app\models\UtenteModel();
+
+                    // l'email del logopedista è recuperata della proprietà user di $app
+                    $logopedistaEmail = Yii::$app->user->getId();
+
                     $fieldUsername = $form->field($model, 'username');
 
                     $hiddenFieldLogopedista = $form->field($model, 'logopedista')
                         ->hiddenInput(['value' => $logopedistaEmail])->label(false);
 
-                    Yii::error($caregiverEmail);
                     $hiddenFieldCaregiver = $form->field($model, 'caregiver')
                         ->hiddenInput(['value' => $caregiverEmail])->label(false);
+                } else if ($attore == $CAREGIVER) {
+                    $model = new \app\models\CaregiverModel();
+                } else {
+                    $model = new \app\models\LogopedistaModel();
                 }
 
+                // echo dei campi del form
                 echo $form->field($model, 'nome');
                 echo $form->field($model, 'cognome');
                 echo $form->field($model, 'dataNascita');
                 echo $form->field($model, 'email');
-                echo $fieldUsername;
-                echo $hiddenFieldLogopedista;
-                echo $hiddenFieldCaregiver;
+                // i campi variabili non compaiono nel form se NON sono valorizzati
+                echo $fieldUsername; // campo variabile
+                echo $hiddenFieldLogopedista; // campo variabile
+                echo $hiddenFieldCaregiver; // campo variabile
                 echo $form->field($model, 'passwordD')->passwordInput();
-            echo '<div class="form-group">';
-                 echo Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
-            echo '</div>';
 
-            ActiveForm::end(); ?>
+                echo '<div class="form-group">';
+                     echo Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
+                echo '</div>';
+
+                ActiveForm::end(); ?>
             </p>
-
-</div><!-- Registrazione -->
+</div>
