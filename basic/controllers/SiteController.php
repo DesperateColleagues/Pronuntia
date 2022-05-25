@@ -79,17 +79,14 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
-            Yii::error(Yii::$app->request->post());
-            Yii::error($model->tipoUtente);
-
             if($model->tipoUtente == 'log') {
-                $this->layout = 'base';
+                $this->layout = 'dashlog';
                 return $this->render('@app/views/logopedista/dashboardlogopedista');
             } else if ($model->tipoUtente == 'car') {
-                $this->layout = 'plain';
+                $this->layout = 'dashcar';
                 return $this->render('@app/views/caregiver/dashboardcaregiver');
             } else if ($model->tipoUtente == 'utn') {
-                $this->layout = 'plain';
+                $this->layout = 'dashutn';
                 return $this->render('@app/views/utente/dashboardutente');
             }
         }
@@ -106,8 +103,8 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-
+        if(!Yii::$app->user->isGuest)
+            Yii::$app->user->logout(true);
         return $this->goHome();
     }
 
@@ -139,7 +136,9 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionEntry()
+
+
+    /*public function actionEntry()
     {
         $model = new EntryForm();
 
@@ -153,5 +152,5 @@ class SiteController extends Controller
             // either the page is initially displayed or there is some validation error
             return $this->render('entry');
         }
-    }
+    }*/
 }

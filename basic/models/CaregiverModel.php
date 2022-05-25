@@ -4,7 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\NotSupportedException;
-use Yii\db\ActiveRecord;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**

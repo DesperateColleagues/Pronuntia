@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use Exception;
 use Yii;
 use yii\base\Model;
 
@@ -24,6 +25,7 @@ class LoginForm extends Model
             [['email', 'password','tipoUtente'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
+            // TODO controllare la email
             // password is validated by validatePassword()
             ['password', 'validatePassword']
         ];
@@ -40,17 +42,19 @@ class LoginForm extends Model
     public function getUser(){
         if ($this->_user === false){ //se "l'utente" non è inizializzato, allora dobbiamo recuperarci i dati
 
-            if($this->tipoUtente == 'log') {//logopedista
-                $this->_user = LogopedistaModel::findByEmail($this->email);
-                Yii::error("Logopedista");
-            } else if ($this->tipoUtente == 'utn') {
-                $this->_user = UtenteModel::findByUsername($this->email);
-                Yii::error("Utente");
-            } else if ($this->tipoUtente == 'car') {
-                $this->_user = CaregiverModel::findByEmail($this->email);
-                Yii::error("Caregiver");
-            }
+            try{
 
+                if ($this->tipoUtente == 'log') {//logopedista
+                    $this->_user = LogopedistaModel::findByEmail($this->email);
+                } else if ($this->tipoUtente == 'utn') {
+                    $this->_user = UtenteModel::findByUsername($this->email);
+                } else if ($this->tipoUtente == 'car') {
+                    $this->_user = CaregiverModel::findByEmail($this->email);
+                }
+
+            } catch(Exception $e) {
+                Yii::error("Errore, hai molto probabilmente selezionato l'attore sbagliato nell'accesso ".$e->getMessage());
+            }
         }
 
         return $this->_user;

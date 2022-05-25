@@ -32,19 +32,34 @@ AppAsset::register($this);
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'items' => [
+                ['label' => 'Logout', 'url' => ['/site/logout'], 'linkOptions' => ['data' => ['method' => 'post']]] //not working atm
+            ],
         ],
     ]);
 
     try {
+
         echo Nav::widget([
+            'items' => [
+                [
+                    'label' => 'Registrazione assistiti',
+                    'items' => [
+                        ['label' => 'Utente autonomo', 'url' => ['/logopedista/registrazione?tipoAttore=uta']],
+                        ['label' => 'Utente non autonomo', 'url' => ['/logopedista/registrazione?tipoAttore=car']]
+                    ],
+                ],
+                ['label' => 'Logout', 'url' => ['/site/logout'], 'linkOptions' => ['data' => ['method' => 'post']]]
+
+
+        ],
             'options' => ['class' => 'navbar-nav'],
-            'items' => [['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ],
         ]);
-    } catch(Exception $e) {
+
+    } catch (Exception $e) {
         Yii::error($e->getMessage());
     }
+
     NavBar::end();
     ?>
 </header>
@@ -59,12 +74,6 @@ AppAsset::register($this);
     </div>
 </main>
 
-<!--<footer class="footer mt-auto py-3 text-muted">
-    <div class="container">
-        <p class="float-left">&copy; My Company <?= date('Y') ?></p>
-        <p class="float-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>!-->
 
 <?php $this->endBody() ?>
 </body>
