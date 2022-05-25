@@ -10,6 +10,7 @@ class LoginForm extends Model
     public $email;
     public $password;
     public $rememberMe = true;
+    public $tipoUtente;
 
     private $_user = false;
 
@@ -20,10 +21,9 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['email', 'password'], 'required'],
+            [['email', 'password','tipoUtente'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
-            ['email', 'email'],
             // password is validated by validatePassword()
             ['password', 'validatePassword']
         ];
@@ -38,8 +38,19 @@ class LoginForm extends Model
     }
 
     public function getUser(){
-        if ($this->_user === false){
-            $this->_user = LogopedistaModel::findByEmail($this->email);
+        if ($this->_user === false){ //se "l'utente" non è inizializzato, allora dobbiamo recuperarci i dati
+
+            if($this->tipoUtente == 'log') {//logopedista
+                $this->_user = LogopedistaModel::findByEmail($this->email);
+                Yii::error("Logopedista");
+            } else if ($this->tipoUtente == 'utn') {
+                $this->_user = UtenteModel::findByUsername($this->email);
+                Yii::error("Utente");
+            } else if ($this->tipoUtente == 'car') {
+                $this->_user = CaregiverModel::findByEmail($this->email);
+                Yii::error("Caregiver");
+            }
+
         }
 
         return $this->_user;

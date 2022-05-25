@@ -78,8 +78,20 @@ class SiteController extends Controller
         $model = new LoginForm();
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            $this->layout = 'base';
-            return $this->render('@app/views/logopedista/dashboardlogopedista');
+
+            Yii::error(Yii::$app->request->post());
+            Yii::error($model->tipoUtente);
+
+            if($model->tipoUtente == 'log') {
+                $this->layout = 'base';
+                return $this->render('@app/views/logopedista/dashboardlogopedista');
+            } else if ($model->tipoUtente == 'car') {
+                $this->layout = 'plain';
+                return $this->render('@app/views/caregiver/dashboardcaregiver');
+            } else if ($model->tipoUtente == 'utn') {
+                $this->layout = 'plain';
+                return $this->render('@app/views/utente/dashboardutente');
+            }
         }
 
         return $this->render('login', [
