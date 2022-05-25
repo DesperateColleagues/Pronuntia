@@ -101,7 +101,9 @@ else if ($attore == $CAREGIVER)
                 echo $form->field($model, 'passwordD')->passwordInput();
 
                 echo '<div class="form-group">';
-                     echo Html::submitButton('Registrati', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
+                    //echo Html::submitButton('Indietro', ['class' => 'btn', 'url' => ['/logopedista/dashboardlogopedista']]);
+                    echo Html::submitButton('Registra', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
+
                 echo '</div>';
 
                 ActiveForm::end(); ?>

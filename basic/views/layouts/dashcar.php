@@ -32,8 +32,26 @@ AppAsset::register($this);
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
+            'items' => [
+                ['label' => 'Logout', 'url' => ['/site/logout']] //impostazione temporanea
+            ],
         ],
     ]);
+
+    try {
+
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav'],
+            'items' => [['label' => 'Prenota visita', 'url' => ['/site/about']],
+                ['label' => 'Feedback', 'url' => ['/site/about']],
+                ['label' => 'Logout', 'url' => ['/site/logout']]
+            ],
+        ]);
+
+    } catch (Exception $e) {
+        Yii::error($e->getMessage());
+    }
+
     NavBar::end();
     ?>
 </header>

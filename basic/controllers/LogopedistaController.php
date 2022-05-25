@@ -51,7 +51,7 @@ class LogopedistaController extends Controller
                     return $this->render('registrazione', [ 'caregiverEmail' => $email,
                         'attore' => $tipoAttore,]);
                 } else if ($tipoAttore == 'ut') {
-                    $this->layout = 'base';
+                    $this->layout = 'dashlog';
                     return $this->render('@app/views/logopedista/dashboardlogopedista');
                 }
             } else {
