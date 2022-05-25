@@ -26,6 +26,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 
+
+        <?= $form->field($model, 'tipoUtente')->dropDownList(['log' => 'Logopedista', 'car' => 'Caregiver', 'utn' => 'Utente']); ?>
+
         <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
         <?= $form->field($model, 'password')->passwordInput() ?>

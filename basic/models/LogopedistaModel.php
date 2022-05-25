@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -16,7 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $passwordD
  * @property string $authKey
  */
-class LogopedistaModel extends \yii\db\ActiveRecord implements IdentityInterface
+class LogopedistaModel extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
