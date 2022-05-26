@@ -13,11 +13,11 @@ class ComposerStaticInit8f125ad66df661ed136b04567de7d235
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
+        '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
         '25072dd6e2470089de65ae7bf11d3109' => __DIR__ . '/..' . '/symfony/polyfill-php72/bootstrap.php',
         'e3b2795a8a512b6083af088fb53afe6c' => __DIR__ . '/..' . '/codeception/codeception/functions.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
@@ -34,7 +34,6 @@ class ComposerStaticInit8f125ad66df661ed136b04567de7d235
             'yii\\faker\\' => 10,
             'yii\\debug\\' => 10,
             'yii\\composer\\' => 13,
-            'yii\\bootstrap\\' => 14,
             'yii\\bootstrap4\\' => 15,
             'yii\\' => 4,
         ),
@@ -42,10 +41,10 @@ class ComposerStaticInit8f125ad66df661ed136b04567de7d235
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
-        'd' => 
+        'k' => 
         array (
-            'dosamigos\\datetimepicker\\' => 25,
-            'dosamigos\\datepicker\\' => 21,
+            'kartik\\date\\' => 12,
+            'kartik\\base\\' => 12,
         ),
         'c' => 
         array (
@@ -131,10 +130,6 @@ class ComposerStaticInit8f125ad66df661ed136b04567de7d235
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-composer',
         ),
-        'yii\\bootstrap\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/yiisoft/yii2-bootstrap/src',
-        ),
         'yii\\bootstrap4\\' => 
         array (
             0 => __DIR__ . '/..' . '/yiisoft/yii2-bootstrap4/src',
@@ -149,13 +144,13 @@ class ComposerStaticInit8f125ad66df661ed136b04567de7d235
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
-        'dosamigos\\datetimepicker\\' => 
+        'kartik\\date\\' => 
         array (
-            0 => __DIR__ . '/..' . '/2amigos/yii2-date-time-picker-widget/src',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-widget-datepicker/src',
         ),
-        'dosamigos\\datepicker\\' => 
+        'kartik\\base\\' => 
         array (
-            0 => __DIR__ . '/..' . '/2amigos/yii2-date-picker-widget/src',
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-krajee-base/src',
         ),
         'cebe\\markdown\\' => 
         array (

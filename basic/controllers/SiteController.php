@@ -2,14 +2,16 @@
 
 namespace app\controllers;
 
+use app\models\ContactForm;
+use app\models\FacadeAccount;
+use app\models\LoginForm;
+use app\models\TipoAttore;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
-use app\models\EntryForm;
+
 
 class SiteController extends Controller
 {
@@ -74,25 +76,30 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+        $post = Yii::$app->request->post();
+        $account = new FacadeAccount();
 
-        $model = new LoginForm();
+        /** res assume due tipologie di valori:
+         *  1) false: se il login non va a buon fine
+         *  2) il valore del tipo di utente che sta effettuando l'accesso: se il login va a buon fine
+         */
+        $res = $account->accesso($post);
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-
-            if($model->tipoUtente == 'log') {
+        if($res == TipoAttore::LOGOPEDISTA) {
                 $this->layout = 'dashlog';
                 return $this->render('@app/views/logopedista/dashboardlogopedista');
-            } else if ($model->tipoUtente == 'car') {
+        } else if ($res == TipoAttore::CAREGIVER) {
                 $this->layout = 'dashcar';
                 return $this->render('@app/views/caregiver/dashboardcaregiver');
-            } else if ($model->tipoUtente == 'utn') {
+        } else if ($res == TipoAttore::UTENTE) {
                 $this->layout = 'dashutn';
                 return $this->render('@app/views/utente/dashboardutente');
-            }
+        } else if ($res ==  'n') {
+            Yii::error('Errore nel login');
         }
 
         return $this->render('login', [
-            'model' => $model,
+            'model' => $account->getLoginForm(),
         ]);
     }
 
@@ -135,22 +142,4 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
-
-
-    /*public function actionEntry()
-    {
-        $model = new EntryForm();
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // valid data received in $model
-
-            // do something meaningful here about $model ...
-
-            return $this->render('entry-confirm');
-        } else {
-            // either the page is initially displayed or there is some validation error
-            return $this->render('entry');
-        }
-    }*/
 }
