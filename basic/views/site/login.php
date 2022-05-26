@@ -6,14 +6,19 @@
 
 use yii\bootstrap4\ActiveForm;
 use yii\bootstrap4\Html;
+use app\models\TipoAttore;
 
 $this->title = 'Login';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+    <p>
+        <li>Se sei un <b>logopedista</b> o un <b>caregiver</b> accedi usando la tua <u>email</u></li>
+    <li>Se sei un <b>utente</b> accedi usando il tuo <u>username</u></li>
+    </p>
 
     <?php $form = ActiveForm::begin([
         'id' => 'login-form',
@@ -24,10 +29,16 @@ $this->params['breadcrumbs'][] = $this->title;
             'inputOptions' => ['class' => 'col-lg-3 form-control'],
             'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
         ],
-    ]); ?>
+    ]);
 
 
-        <?= $form->field($model, 'tipoUtente')->dropDownList(['log' => 'Logopedista', 'car' => 'Caregiver', 'utn' => 'Utente']); ?>
+    ?>
+
+        <!-- Costruzione della dropdwon list per stabilire quale attore sta accedendo!-->
+        <?= $form->field($model, 'tipoUtente')
+            ->dropDownList([TipoAttore::LOGOPEDISTA => 'Logopedista',
+                TipoAttore::CAREGIVER => 'Caregiver',
+                TipoAttore::UTENTE => 'Utente']); ?>
 
         <?= $form->field($model, 'email')->textInput(['autofocus' => true]) ?>
 
@@ -37,7 +48,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => "<div class=\"offset-lg-1 col-lg-3 custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
         ]) ?>
 
-        <div class="form-group">
+        <?= $form->errorSummary($model) ?>
+
+
+    <div class="form-group">
             <div class="offset-lg-1 col-lg-11">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
             </div>
@@ -45,8 +59,4 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php ActiveForm::end(); ?>
 
-    <div class="offset-lg-1" style="color:#999;">
-        You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-        To modify the username/password, please check out the code <code>app\models\User::$users</code>.
-    </div>
 </div>

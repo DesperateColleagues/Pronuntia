@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\date\DatePicker;
 
 // parametri della VIEW in cui inserire anche il model
 /* @var $this yii\web\View */
@@ -92,7 +93,17 @@ else if ($attore == $CAREGIVER)
                 // echo dei campi del form
                 echo $form->field($model, 'nome');
                 echo $form->field($model, 'cognome');
-                echo $form->field($model, 'dataNascita');
+                echo $form->field($model, 'dataNascita')->widget(DatePicker::className(), [
+                        'name' => 'dataNascita',
+                        'type' => DatePicker::TYPE_INPUT,
+                        'value' => '',
+                        'bsVersion' => '4',
+                        'language' => 'it',
+                        'pluginOptions' => [
+                                'autoclose' => true,
+                                'format' => 'yyyy-mm-dd'
+                        ]
+                ])->label('Data di nascita');
                 echo $form->field($model, 'email');
                 // i campi variabili non compaiono nel form se NON sono valorizzati
                 echo $fieldUsername; // campo variabile

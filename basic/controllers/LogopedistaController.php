@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\TipoAttore;
+use app\models\FacadeAccount;
 use Yii;
 use yii\web\Controller;
 
@@ -17,7 +19,7 @@ class LogopedistaController extends Controller
      *                              - car: caregiver
      *                              - ut: utente -> a livello di controller non serve fare differenza sul tipo di utente
     */
-    public function actionRegistrazione($tipoAttore = 'log'){
+    public function actionRegistrazione($tipoAttore = TipoAttore::LOGOPEDISTA){
         try {
             $post = Yii::$app->request->post(); // recupera l'array del post
 
@@ -26,7 +28,7 @@ class LogopedistaController extends Controller
              * presenza di un utente non autonomo è individuata da $tipoAttore = 'car'
              */
             if (array_key_exists('UtenteModel', $post))
-                $tipoAttore = 'ut';
+                $tipoAttore = TipoAttore::UTENTE;
 
             // istanziazione della FacadeAccount e definizione del tipo di attore
             $account = new FacadeAccount();
@@ -37,9 +39,9 @@ class LogopedistaController extends Controller
 
             if ($res) {
 
-                if ($tipoAttore == 'log') {
+                if ($tipoAttore == TipoAttore::LOGOPEDISTA) {
                     return $this->render('@app/views/site/index');
-                } else if ($tipoAttore == 'car') {
+                } else if ($tipoAttore == TipoAttore::CAREGIVER) {
                     /* Il tipo di attore per la VIEW sarà utn. Al contrario del controller (dove registrare un utente
                         autonomo o non autonomo è eseguire la stessa operazione), nella VIEW è necessario specificare
                         il tipo di utente, in quanto utenti autonomi o non autonomi dispongono di campi diversi e
@@ -50,7 +52,7 @@ class LogopedistaController extends Controller
                     $email = Yii::$app->request->post('CaregiverModel')['email'];
                     return $this->render('registrazione', [ 'caregiverEmail' => $email,
                         'attore' => $tipoAttore,]);
-                } else if ($tipoAttore == 'ut') {
+                } else if ($tipoAttore == TipoAttore::UTENTE) {
                     $this->layout = 'dashlog';
                     return $this->render('@app/views/logopedista/dashboardlogopedista');
                 }
@@ -70,5 +72,4 @@ class LogopedistaController extends Controller
     public function actionDashboardlogopedista () {
         return $this->render('dashboardlogopedista');
     }
-
 }
