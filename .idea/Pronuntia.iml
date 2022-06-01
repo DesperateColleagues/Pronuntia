@@ -13,7 +13,6 @@
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/codeception/module-filesystem" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/yiisoft/yii2" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/codeception/phpunit-wrapper" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/yiisoft/yii2-bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/codeception/specify" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/codeception/stub" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/yiisoft/yii2-composer" />
@@ -30,13 +29,10 @@
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/ezyang/htmlpurifier" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/yii2-pjax" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/smalot-bootstrap-datetimepicker" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/inputmask" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/jquery" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/punycode" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/bootstrap-datepicker" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/sebastian/recursion-context" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/sebastian/diff" />
@@ -50,8 +46,6 @@
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/sebastian/exporter" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/myclabs/deep-copy" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/2amigos/yii2-date-picker-widget" />
-      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/2amigos/yii2-date-time-picker-widget" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/swiftmailer/swiftmailer" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/phpspec/php-diff" />
@@ -96,6 +90,8 @@
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/guzzlehttp/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/doctrine/lexer" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/kartik-v/yii2-widget-datepicker" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/kartik-v/yii2-krajee-base" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
