@@ -31,6 +31,17 @@ CREATE TABLE IF NOT EXISTS utente (
   FOREIGN KEY (caregiver) REFERENCES caregiver(email)
 );
 
+CREATE TABLE IF NOT EXISTS appuntamento (
+  dataAppuntamento DATE NOT NULL,
+  oraAppuntamento TIME NOT NULL,
+  logopedista CHAR(255) NOT NULL,
+  utente CHAR(255) NULL DEFAULT NULL,
+  caregiver CHAR(255) NULL DEFAULT NULL,
+  FOREIGN KEY (logopedista) REFERENCES logopedista(email),
+  FOREIGN KEY (caregiver) REFERENCES caregiver(email),
+  FOREIGN KEY (utente) REFERENCES utente(username)
+);
+
 SELECT * FROM logopedista;
 SELECT * FROM caregiver;
 SELECT * FROM utente;

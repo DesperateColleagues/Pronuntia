@@ -51,7 +51,7 @@ class LogopedistaController extends Controller
                     // recupera l'email del careviver dal post
                     $email = Yii::$app->request->post('CaregiverModel')['email'];
                     return $this->render('registrazione', [ 'caregiverEmail' => $email,
-                        'attore' => $tipoAttore,]);
+                        'attore' => $tipoAttore]);
                 } else if ($tipoAttore == TipoAttore::UTENTE) {
                     $this->layout = 'dashlog';
                     return $this->render('@app/views/logopedista/dashboardlogopedista');

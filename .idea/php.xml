@@ -11,7 +11,6 @@
       <path value="$PROJECT_DIR$/basic/vendor/codeception/module-filesystem" />
       <path value="$PROJECT_DIR$/basic/vendor/yiisoft/yii2" />
       <path value="$PROJECT_DIR$/basic/vendor/codeception/phpunit-wrapper" />
-      <path value="$PROJECT_DIR$/basic/vendor/yiisoft/yii2-bootstrap" />
       <path value="$PROJECT_DIR$/basic/vendor/codeception/specify" />
       <path value="$PROJECT_DIR$/basic/vendor/codeception/stub" />
       <path value="$PROJECT_DIR$/basic/vendor/yiisoft/yii2-composer" />
@@ -28,13 +27,10 @@
       <path value="$PROJECT_DIR$/basic/vendor/ezyang/htmlpurifier" />
       <path value="$PROJECT_DIR$/basic/vendor/fakerphp/faker" />
       <path value="$PROJECT_DIR$/basic/vendor/bower-asset/yii2-pjax" />
-      <path value="$PROJECT_DIR$/basic/vendor/bower-asset/smalot-bootstrap-datetimepicker" />
       <path value="$PROJECT_DIR$/basic/vendor/bower-asset/inputmask" />
-      <path value="$PROJECT_DIR$/basic/vendor/bower-asset/bootstrap" />
       <path value="$PROJECT_DIR$/basic/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/basic/vendor/bower-asset/jquery" />
       <path value="$PROJECT_DIR$/basic/vendor/bower-asset/punycode" />
-      <path value="$PROJECT_DIR$/basic/vendor/bower-asset/bootstrap-datepicker" />
       <path value="$PROJECT_DIR$/basic/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/basic/vendor/sebastian/recursion-context" />
       <path value="$PROJECT_DIR$/basic/vendor/sebastian/diff" />
@@ -48,8 +44,6 @@
       <path value="$PROJECT_DIR$/basic/vendor/sebastian/exporter" />
       <path value="$PROJECT_DIR$/basic/vendor/sebastian/object-reflector" />
       <path value="$PROJECT_DIR$/basic/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/basic/vendor/2amigos/yii2-date-picker-widget" />
-      <path value="$PROJECT_DIR$/basic/vendor/2amigos/yii2-date-time-picker-widget" />
       <path value="$PROJECT_DIR$/basic/vendor/swiftmailer/swiftmailer" />
       <path value="$PROJECT_DIR$/basic/vendor/phpspec/prophecy" />
       <path value="$PROJECT_DIR$/basic/vendor/phpspec/php-diff" />
@@ -94,6 +88,8 @@
       <path value="$PROJECT_DIR$/basic/vendor/guzzlehttp/psr7" />
       <path value="$PROJECT_DIR$/basic/vendor/doctrine/lexer" />
       <path value="$PROJECT_DIR$/basic/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/basic/vendor/kartik-v/yii2-widget-datepicker" />
+      <path value="$PROJECT_DIR$/basic/vendor/kartik-v/yii2-krajee-base" />
     </include_path>
   </component>
 </project>
