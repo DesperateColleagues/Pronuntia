@@ -49,6 +49,7 @@ AppAsset::register($this);
                         ['label' => 'Utente non autonomo', 'url' => ['/logopedista/registrazione?tipoAttore=car']]
                     ],
                 ],
+                ['label' => 'Appuntamento', 'url' => ['/appuntamento/inserisciappuntamento']],
                 ['label' => 'Logout', 'url' => ['/site/logout'], 'linkOptions' => ['data' => ['method' => 'post']]]
 
 

@@ -92,6 +92,11 @@
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/kartik-v/yii2-widget-datepicker" />
       <excludeFolder url="file://$MODULE_DIR$/basic/vendor/kartik-v/yii2-krajee-base" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/yiisoft/yii2-jui" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/janisto/yii2-timepicker" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/jqueryui-timepicker-addon" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/bower-asset/jquery-ui" />
+      <excludeFolder url="file://$MODULE_DIR$/basic/vendor/kartik-v/yii2-widget-timepicker" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -8,7 +8,8 @@ class FacadeAppuntamento
 
         $model = new AppuntamentoModel();
         $model->load($appParam);
-        $model->insert();
+
+        return $model->insert();
     }
 
     public function confermaAppuntamento($appParam){
@@ -19,6 +20,7 @@ class FacadeAppuntamento
         $updatedModel = AppuntamentoModel::findByPK($model->dataAppuntamento,$model->logopedista,$model->oraAppuntamento);
         $updatedModel->caregiver = $model->caregiver;
         $updatedModel->utente = $model->utente;
-        $updatedModel->update();
+
+        return $updatedModel->update();
     }
 }
