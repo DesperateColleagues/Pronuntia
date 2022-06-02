@@ -38,10 +38,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'language' => 'it',
         'mode' => 'time',
         'clientOptions' => [
-            'timeFormat' => 'HH:mm:ss',
+            'timeFormat' => 'HH:mm',
             'showSecond' => false,
         ]
-    ]);
+    ])->label('Ora appuntamento');
 
     echo $form->field($model, 'dataAppuntamento')->widget(DatePicker::className(), [
         'name' => 'dataAppuntamento',
