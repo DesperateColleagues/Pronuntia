@@ -69,7 +69,8 @@ class LogopedistaController extends Controller
         ]);
     }
 
-    public function actionDashboardlogopedista () {
+    public function actionDashboardlogopedista ($tipoAttore) {
+        $this->layout = 'dashlog';
         return $this->render('dashboardlogopedista');
     }
 }
