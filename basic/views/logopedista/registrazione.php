@@ -93,19 +93,21 @@ else if ($attore == $CAREGIVER)
                 // echo dei campi del form
                 echo $form->field($model, 'nome');
                 echo $form->field($model, 'cognome');
-                echo $form->field($model, 'dataNascita')->widget(DatePicker::className(), [
-                        'name' => 'dataNascita',
-                        'type' => DatePicker::TYPE_INPUT,
-                        'value' => '',
-                        'bsVersion' => '4',
-                        'language' => 'it',
-                        'pluginOptions' => [
-                                'autoclose' => true,
-                                'format' => 'yyyy-mm-dd'
-                        ]
-                ])->label('Data di nascita');
                 echo $form->field($model, 'email');
-                // i campi variabili non compaiono nel form se NON sono valorizzati
+
+                echo $form->field($model, 'dataNascita')->widget(DatePicker::className(), [
+                    'name' => 'dataNascita',
+                    'type' => DatePicker::TYPE_INPUT,
+                    'value' => '',
+                    'bsVersion' => '4',
+                    'language' => 'it',
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ])->label('Data di nascita');
+                // i campi variabili non compaiono nel for
+                //m se NON sono valorizzati
                 echo $fieldUsername; // campo variabile
                 echo $hiddenFieldLogopedista; // campo variabile
                 echo $hiddenFieldCaregiver; // campo variabile

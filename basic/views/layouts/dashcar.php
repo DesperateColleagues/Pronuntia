@@ -42,7 +42,7 @@ AppAsset::register($this);
 
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
-            'items' => [['label' => 'Prenota visita', 'url' => ['/site/about']],
+            'items' => [['label' => 'Prenota visita', 'url' => ['/appuntamento/index?tipoAttore=car']],
                 ['label' => 'Feedback', 'url' => ['/site/about']],
                 ['label' => 'Logout', 'url' => ['/site/logout']]
             ],

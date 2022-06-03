@@ -31,7 +31,7 @@ class AppuntamentoModel extends \yii\db\ActiveRecord
     {
         return [
             [['dataAppuntamento', 'oraAppuntamento', 'logopedista'], 'required'],
-            [['dataAppuntamento', 'oraAppuntamento'], 'safe'],
+            //[['dataAppuntamento', 'oraAppuntamento'], 'safe'],
             [['logopedista', 'utente', 'caregiver'], 'string', 'max' => 255]
         ];
     }
@@ -49,4 +49,5 @@ class AppuntamentoModel extends \yii\db\ActiveRecord
             'caregiver' => 'Caregiver',
         ];
     }
+
 }

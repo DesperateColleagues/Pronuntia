@@ -103,4 +103,8 @@ class CaregiverModel extends ActiveRecord implements IdentityInterface
     public function validatePassword($password){
         return $this->passwordD == md5($password);
     }
+
+    public function getUserByEmail($email){
+        return UtenteModel::findOne(['caregiver' => $email])->username;
+    }
 }

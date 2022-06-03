@@ -86,14 +86,17 @@ class SiteController extends Controller
         $res = $account->accesso($post);
 
         if($res == TipoAttore::LOGOPEDISTA) {
-                $this->layout = 'dashlog';
-                return $this->render('@app/views/logopedista/dashboardlogopedista');
+                $this->redirect('/logopedista/dashboardlogopedista?tipoAttore='.$res);
+                //return $this->render('@app/views/logopedista/dashboardlogopedista');
         } else if ($res == TipoAttore::CAREGIVER) {
-                $this->layout = 'dashcar';
-                return $this->render('@app/views/caregiver/dashboardcaregiver');
+                //$this->layout = 'dashcar';
+                $cookie_name = "caregiver";
+                $cookie_value = Yii::$app->user->getId();
+                setcookie($cookie_name, $cookie_value, 0, "/");
+                $this->redirect('/caregiver/dashboardcaregiver?tipoAttore='.$res);
         } else if ($res == TipoAttore::UTENTE) {
-                $this->layout = 'dashutn';
-                return $this->render('@app/views/utente/dashboardutente');
+                $this->redirect('/utente/dashboardutente?tipoAttore='.$res);
+                /*return $this->render('@app/views/utente/dashboardutente');*/
         } else if ($res ==  'n') {
             Yii::error('Errore nel login');
         }
