@@ -4,9 +4,11 @@ use app\models\CaregiverModel;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\DetailView;
+use app\models\DiagnosiModel;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\AppuntamentoModel */
+/* @var $diaModel app\models\DiagnosiModel */
 
 if(isset($_COOKIE['CurrentActor'])) {
     $tipoAttore = $_COOKIE['CurrentActor'];
@@ -27,11 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php
 
             if ($tipoAttore == \app\models\TipoAttore::LOGOPEDISTA){
+                $diaModel = new DiagnosiModel();
                 echo Html::a('Update',
                     ['update',
                         'dataAppuntamento' => $model->dataAppuntamento,
                         'oraAppuntamento' => $model->oraAppuntamento,
-                        'logopedista' => $model->logopedista],
+                        'logopedista' => $model->logopedista,
+                        'diagnosi' => $diaModel->mediaFile],
                     ['class' => 'btn btn-primary']);
 
                 echo Html::a('Delete',
@@ -49,7 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
             } else {
                 $form = ActiveForm::begin(['id' => 'confirm-form']);
 
-                if (isset($_COOKIE['caregiver'])){
+                if (isset($_COOKIE['caregiver'])){ // recupero dati in presenza di un caregiver
                     $caregiverMail = $_COOKIE['caregiver'];
                     $modelCaregiver = new CaregiverModel();
                     $username = $modelCaregiver->getUserByEmail($caregiverMail);
@@ -59,7 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     echo $form->field($model, 'utente')
                         ->hiddenInput(['value' => $username])->label(false);
-                } else if (isset($_COOKIE['utente'])){
+                } else if (isset($_COOKIE['utente'])){ // recupero dati in presenza di un utente
                     $username = $_COOKIE['utente'];
 
                     echo $form->field($model, 'utente')

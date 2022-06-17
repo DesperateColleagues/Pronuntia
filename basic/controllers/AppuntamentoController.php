@@ -5,12 +5,17 @@ namespace app\controllers;
 use app\models\AppuntamentoModel;
 use app\models\AppuntamentoModelSearch;
 use app\models\CaregiverModel;
+use app\models\DiagnosiModel;
 use app\models\TipoAttore;
+use Exception;
 use yii\base\Model;
+use yii\helpers\Console;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
+use yii\web\UploadedFile;
+use yii\helpers\VarDumper;
 
 /**
  * AppuntamentoController implements the CRUD actions for AppuntamentoModel model.
@@ -119,12 +124,34 @@ class AppuntamentoController extends Controller
     {
         $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        $diaModel = new DiagnosiModel();
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $diaModel->load($this->request->post())) {
+
+            VarDumper::dump($model->diagnosi);
+
+            try{
+                $diaModel->mediaFile = UploadedFile::getInstance($diaModel,'mediaFile');
+                $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.'.$diaModel->id.".docx");
+
+                $diaModel->path = 'diagnosi/Diagnosi.'.$diaModel->id.".docx";
+
+                $diaModel->save();
+
+                $model->diagnosi = $diaModel->id;
+
+            }catch(\Throwable $ex){
+                $model->save();
+            }
+
+            $model->save();
+
             return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'diaModel' => $diaModel
         ]);
     }
 

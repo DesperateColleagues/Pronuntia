@@ -17,7 +17,7 @@ class AppuntamentoModelSearch extends AppuntamentoModel
     public function rules()
     {
         return [
-            [['dataAppuntamento', 'oraAppuntamento', 'logopedista', 'utente', 'caregiver'], 'safe'],
+            [['dataAppuntamento', 'oraAppuntamento', 'logopedista', 'utente', 'caregiver','diagnosi'], 'safe'],
         ];
     }
 

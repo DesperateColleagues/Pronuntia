@@ -12,6 +12,7 @@ use Yii;
  * @property string $logopedista
  * @property string|null $utente
  * @property string|null $caregiver
+ * @property string|null $diagnosi
  *
  */
 class AppuntamentoModel extends \yii\db\ActiveRecord
@@ -32,7 +33,7 @@ class AppuntamentoModel extends \yii\db\ActiveRecord
         return [
             [['dataAppuntamento', 'oraAppuntamento', 'logopedista'], 'required'],
             //[['dataAppuntamento', 'oraAppuntamento'], 'safe'],
-            [['logopedista', 'utente', 'caregiver'], 'string', 'max' => 255]
+            [['logopedista', 'utente', 'caregiver','diagnosi'], 'string', 'max' => 255]
         ];
     }
 
@@ -47,6 +48,7 @@ class AppuntamentoModel extends \yii\db\ActiveRecord
             'logopedista' => 'Logopedista',
             'utente' => 'Utente',
             'caregiver' => 'Caregiver',
+            'diagnosi' => 'Diagnosi'
         ];
     }
 
