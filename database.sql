@@ -43,17 +43,26 @@ CREATE TABLE IF NOT EXISTS appuntamento (
   FOREIGN KEY (utente) REFERENCES utente(username)
 );
 
+CREATE TABLE IF NOT EXISTS diagnosi (
+  id VARCHAR(23),
+  mediaFile BLOB,
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS appuntamento (
   dataAppuntamento DATE NOT NULL,
   oraAppuntamento TIME NOT NULL,
   logopedista CHAR(255) NOT NULL,
   utente CHAR(255) NULL,
   caregiver CHAR(255) NULL,
+  diagnosi VARCHAR(23),
   PRIMARY KEY (dataAppuntamento,oraAppuntamento,logopedista),
   FOREIGN KEY (logopedista) REFERENCES logopedista(email),
   FOREIGN KEY (caregiver) REFERENCES caregiver(email),
-  FOREIGN KEY (utente) REFERENCES utente(username)
+  FOREIGN KEY (utente) REFERENCES utente(username),
+  FOREIGN KEY (diagnosi) REFERENCES diagnosi(id)
 );
+
 
 SELECT * FROM logopedista;
 SELECT * FROM caregiver;

@@ -1,11 +1,13 @@
 <?php
 
+use app\models\DiagnosiModel;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\AppuntamentoModel */
+/* @var $diaModel app\models\DiagnosiModel */
 
-$this->title = 'Update Appuntamento Model: ' . $model->dataAppuntamento;
+$this->title = 'Modifica Appuntamento: ' . $model->dataAppuntamento . " - " . $model->oraAppuntamento;
 $this->params['breadcrumbs'][] = ['label' => 'Appuntamento Models', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->dataAppuntamento, 'url' => ['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -16,6 +18,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'diaModel' => $diaModel
     ]) ?>
 
 </div>
