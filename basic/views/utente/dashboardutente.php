@@ -11,7 +11,7 @@ use yii\bootstrap4\Html;
 
 <div class="form-group">
     <?php
-        echo "<br>Dati dell'utente loggato: ".Yii::$app->user->getId();
+        echo "<br>Dati dell'utente loggato: ".$_COOKIE['utente'];
     ?>
 
 </div>

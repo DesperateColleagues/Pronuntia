@@ -10,7 +10,6 @@ use yii\bootstrap4\Html;
 <h1> Benvenuto </h1>
 
 <div class="form-group">
-    <?php //"Html::submitButton('Registra assistito', ['class' => 'btn btn-primary', 'name' => 'reg-button'])" ?>
     <?php
         echo "<br>Dati del logopedista loggato: ".Yii::$app->user->getId();
     ?>

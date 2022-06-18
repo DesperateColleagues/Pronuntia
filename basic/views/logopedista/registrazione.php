@@ -19,11 +19,11 @@ $titolo = 'Logopedista';
 
 // imposta un titolo alla schermata di registrazione
 if ($attore == $UTENTE_AUTONOMO)
-    $titolo = 'Utente autonomo';
+    $titolo = 'utente autonomo';
 else if ($attore == $UTENTE_NON_AUTONOMO)
-    $titolo = 'Utente non autonomo'.'<br>'.'caregiver: '.$caregiverEmail;
+    $titolo = 'utente non autonomo'.'<br>'.'Caregiver associato: '.$caregiverEmail;
 else if ($attore == $CAREGIVER)
-    $titolo = 'Caregiver';
+    $titolo = 'caregiver';
 ?>
 
 <div class="Registrazione">
@@ -32,7 +32,7 @@ else if ($attore == $CAREGIVER)
         <div class="col-lg-5">
 
             <h2> Registrazione </h2>
-            <h5> <?php echo $titolo?> </h5>
+            <h5> <?php echo 'Registrazione nuovo '.$titolo?> </h5>
 
             <p>
                 <!-- Costruzione del form !-->
@@ -115,8 +115,8 @@ else if ($attore == $CAREGIVER)
 
                 echo '<div class="form-group">';
                     //echo Html::submitButton('Indietro', ['class' => 'btn', 'url' => ['/logopedista/dashboardlogopedista']]);
-                    echo Html::submitButton('Registra', ['class' => 'btn btn-primary', 'name' => 'contact-button']);
-
+                    echo Html::submitButton('Registra', ['class' => 'btn btn-primary mr-1', 'name' => 'contact-button']);
+                    echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
                 echo '</div>';
 
                 ActiveForm::end(); ?>

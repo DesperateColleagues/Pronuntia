@@ -9,6 +9,7 @@ use app\models\TipoAttore;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -85,18 +86,25 @@ class SiteController extends Controller
          */
         $res = $account->accesso($post);
 
-        if($res == TipoAttore::LOGOPEDISTA) {
-                $this->redirect('/logopedista/dashboardlogopedista?tipoAttore='.$res);
-                //return $this->render('@app/views/logopedista/dashboardlogopedista');
+        Yii::error($res);
+
+        if ($res == TipoAttore::LOGOPEDISTA) {
+            $this->redirect('/logopedista/dashboardlogopedista?tipoAttore=' . $res);
+            //return $this->render('@app/views/logopedista/dashboardlogopedista');
         } else if ($res == TipoAttore::CAREGIVER) {
-                //$this->layout = 'dashcar';
-                $cookie_name = "caregiver";
-                $cookie_value = Yii::$app->user->getId();
-                setcookie($cookie_name, $cookie_value, 0, "/");
-                $this->redirect('/caregiver/dashboardcaregiver?tipoAttore='.$res);
+            //$this->layout = 'dashcar';
+            $cookie_name = "caregiver";
+            $cookie_value = Yii::$app->user->getId();
+            VarDumper::dump( $cookie_value);
+            setcookie($cookie_name, $cookie_value, 0, "/");
+            $this->redirect('/caregiver/dashboardcaregiver?tipoAttore=' . $res);
         } else if ($res == TipoAttore::UTENTE) {
-                $this->redirect('/utente/dashboardutente?tipoAttore='.$res);
-                /*return $this->render('@app/views/utente/dashboardutente');*/
+            $cookie_name = "utente";
+            $cookie_value = Yii::$app->user->getId();
+            VarDumper::dump( $cookie_value);
+            setcookie($cookie_name, $cookie_value, 0, "/");
+            $this->redirect('/utente/dashboardutente?tipoAttore=' . $res);
+            /*return $this->render('@app/views/utente/dashboardutente');*/
         } else if ($res ==  'n') {
             Yii::error('Errore nel login');
         }
@@ -113,7 +121,7 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        if(!Yii::$app->user->isGuest)
+        if (!Yii::$app->user->isGuest)
             Yii::$app->user->logout(true);
         return $this->goHome();
     }
@@ -144,5 +152,21 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionDownload()
+    {
+        clearstatcache();
+        $file = Yii::$app->request->get('file');
+        $path = Yii::$app->request->get('path');
+        $root = Yii::getAlias('@webroot') . $path . $file;
+        
+        Yii::error($root.' '.file_exists($root));
+
+        if (file_exists($root)) {
+            return Yii::$app->response->sendFile($root);
+        } else {
+            throw new \yii\web\NotFoundHttpException("{$file} is not found!");
+        }
     }
 }

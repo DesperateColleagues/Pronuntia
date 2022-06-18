@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS appuntamento (
 CREATE TABLE IF NOT EXISTS diagnosi (
   id VARCHAR(23),
   mediaFile BLOB,
+  path VARCHAR(255),
   PRIMARY KEY (id)
 );
 

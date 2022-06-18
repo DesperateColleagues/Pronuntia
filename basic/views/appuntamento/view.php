@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'oraAppuntamento' => $model->oraAppuntamento,
                         'logopedista' => $model->logopedista,
                         'diagnosi' => $diaModel->mediaFile],
-                    ['class' => 'btn btn-primary']);
+                    ['class' => 'btn btn-primary mr-1']);
 
                 echo Html::a('Delete',
                     ['delete',
@@ -46,10 +46,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     [
                         'class' => 'btn btn-danger',
                         'data' => [
-                            'confirm' => 'Are you sure you want to delete this item?',
+                            'confirm' => 'Eliminare appuntamento?',
                             'method' => 'post',
                         ],
                     ]);
+
             } else {
                 $form = ActiveForm::begin(['id' => 'confirm-form']);
 
@@ -89,5 +90,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'caregiver',
         ],
     ]) ?>
+
+    <?php echo Html::a('Torna ad appuntamenti',['index','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']);
+    ?>
 
 </div>
