@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\VarDumper;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -18,7 +19,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'oraAppuntamento')->textInput()?>
 
-    <?php if(isset($diaModel)) {
+    <?php if(isset($diaModel) && $model->utente != null) {  // Permette il caricamento della diagnosi solo ed esclusivamente
+                                                            // se alla view viene passato un model di tipo diagnosi. Questo
+                                                            // accadrà solamente quando a richiamare questo form è la view
+                                                            // d'update. Inoltre, il valore dell'utente nel model
+                                                            // dell'appuntamento non deve essere nullo, ovvero l'appuntamento
+                                                            // deve essere stato prenotato da un assistito.
 
         echo $form->field($diaModel, 'mediaFile')->fileInput();
 
@@ -44,7 +50,13 @@ use yii\widgets\ActiveForm;
     ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Salva', ['class' => 'btn btn-success']) ?>
+        <?php 
+        if(isset($_COOKIE['CurrentActor'])) {
+            $tipoAttore = $_COOKIE['CurrentActor'];
+        }
+        echo Html::a('Torna agli appuntamenti',['index','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']);
+        ?>
     </div>
 
     <?php ActiveForm::end(); ?>

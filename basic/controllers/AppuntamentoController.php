@@ -14,6 +14,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
+use yii\data\SqlDataProvider;
 use yii\web\UploadedFile;
 use yii\helpers\VarDumper;
 
@@ -126,21 +127,24 @@ class AppuntamentoController extends Controller
 
         $diaModel = new DiagnosiModel();
 
+        if (isset($_COOKIE['CurrentActor'])) {
+            $tipoAttore = $_COOKIE['CurrentActor'];
+        }
+
         if ($this->request->isPost && $model->load($this->request->post()) && $diaModel->load($this->request->post())) {
 
             VarDumper::dump($model->diagnosi);
 
-            try{
-                $diaModel->mediaFile = UploadedFile::getInstance($diaModel,'mediaFile');
-                $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.'.$diaModel->id.".docx");
+            try {
+                $diaModel->mediaFile = UploadedFile::getInstance($diaModel, 'mediaFile');
+                $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.' . $diaModel->id . ".docx");
 
-                $diaModel->path = 'diagnosi/Diagnosi.'.$diaModel->id.".docx";
+                $diaModel->path = 'diagnosi/Diagnosi.' . $diaModel->id . ".docx";
 
                 $diaModel->save();
 
                 $model->diagnosi = $diaModel->id;
-
-            }catch(\Throwable $ex){
+            } catch (\Throwable $ex) {
                 $model->save();
             }
 
@@ -164,20 +168,40 @@ class AppuntamentoController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+
     public function actionDelete($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
         $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista)->delete();
 
         $tipoAttore = '';
 
-        if(isset($_COOKIE['CurrentActor'])) {
+        if (isset($_COOKIE['CurrentActor'])) {
             $tipoAttore = $_COOKIE['CurrentActor'];
         }
 
         Yii::error($tipoAttore);
 
-        return $this->redirect(['index?tipoAttore='.$tipoAttore]);
+        return $this->redirect(['index?tipoAttore=' . $tipoAttore]);
     }
+
+    public function actionShow()
+    {
+        if (isset($_COOKIE['CurrentActor'])) {
+            $tipoAttore = $_COOKIE['CurrentActor'];
+        }
+
+        $query = 'SELECT appuntamento.dataAppuntamento, appuntamento.utente, diagnosi.id, diagnosi.path FROM diagnosi JOIN appuntamento ON diagnosi.id = appuntamento.diagnosi';
+
+        $sqlDiagnosisProvider = new SqlDataProvider(['sql' => $query]);
+
+        VarDumper::dump($tipoAttore);
+
+        return $this->render('show', [
+            'tipoAttore' => $tipoAttore,
+            'dataProvider' => $sqlDiagnosisProvider
+        ]);
+    }
+
 
     /**
      * Finds the AppuntamentoModel model based on its primary key value.

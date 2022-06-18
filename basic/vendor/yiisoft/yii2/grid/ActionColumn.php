@@ -162,7 +162,7 @@ class ActionColumn extends Column
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
         $this->initDefaultButton('delete', 'trash', [
-            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+            'data-confirm' => Yii::t('yii', 'Eliminare elemento?'), //si, ho modificato una stringa hardcoded. Pazzo.
             'data-method' => 'post',
         ]);
     }
