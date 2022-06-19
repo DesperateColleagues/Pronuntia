@@ -122,6 +122,10 @@ class AppuntamentoController extends Controller
     public function actionUpdate($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
         $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
+        
+        $facadeAppuntamento = new FacadeAppuntamento();
+        
+        $rows = $facadeAppuntamento->ricercaVecchieDiagnosi($model);
 
         $diaModel = new DiagnosiModel();
 
@@ -137,10 +141,6 @@ class AppuntamentoController extends Controller
                 $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.' . $diaModel->id . ".docx");
 
                 $diaModel->path = 'diagnosi/Diagnosi.' . $diaModel->id . ".docx";
-
-                $facadeAppuntamento = new FacadeAppuntamento();
-
-                $rows = $facadeAppuntamento->ricercaVecchieDiagnosi($model);
 
                 $diaModel->save(); //salvataggio nuova diagnosi
 
