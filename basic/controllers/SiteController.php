@@ -95,13 +95,13 @@ class SiteController extends Controller
             //$this->layout = 'dashcar';
             $cookie_name = "caregiver";
             $cookie_value = Yii::$app->user->getId();
-            VarDumper::dump( $cookie_value);
+            VarDumper::dump($cookie_value);
             setcookie($cookie_name, $cookie_value, 0, "/");
             $this->redirect('/caregiver/dashboardcaregiver?tipoAttore=' . $res);
         } else if ($res == TipoAttore::UTENTE) {
             $cookie_name = "utente";
             $cookie_value = Yii::$app->user->getId();
-            VarDumper::dump( $cookie_value);
+            VarDumper::dump($cookie_value);
             setcookie($cookie_name, $cookie_value, 0, "/");
             $this->redirect('/utente/dashboardutente?tipoAttore=' . $res);
             /*return $this->render('@app/views/utente/dashboardutente');*/
@@ -121,8 +121,13 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        if (!Yii::$app->user->isGuest)
+        if (!Yii::$app->user->isGuest) {
+            if (isset($_COOKIE['CurrentActor']))
+                setcookie('CurrentActor', time() - 3600);
+            if (isset($_COOKIE['caregiver']))
+                setcookie('caregiver', time() - 3600);
             Yii::$app->user->logout(true);
+        }
         return $this->goHome();
     }
 
@@ -160,8 +165,6 @@ class SiteController extends Controller
         $file = Yii::$app->request->get('file');
         $path = Yii::$app->request->get('path');
         $root = Yii::getAlias('@webroot') . $path . $file;
-        
-        Yii::error($root.' '.file_exists($root));
 
         if (file_exists($root)) {
             return Yii::$app->response->sendFile($root);

@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'dataAppuntamento',
+            'oraAppuntamento',
             'utente',
 
             // More complex one.
