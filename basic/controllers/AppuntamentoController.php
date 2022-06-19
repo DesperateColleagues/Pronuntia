@@ -4,9 +4,12 @@ namespace app\controllers;
 
 use app\models\AppuntamentoModel;
 use app\models\AppuntamentoModelSearch;
+use app\models\CaregiverModel;
 use app\models\DiagnosiModel;
-use app\models\FacadeAppuntamento;
 use app\models\TipoAttore;
+use Exception;
+use yii\base\Model;
+use yii\helpers\Console;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -98,7 +101,6 @@ class AppuntamentoController extends Controller
         $this->layout = 'dashlog';
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                
                 return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
             }
         } else {
@@ -131,34 +133,22 @@ class AppuntamentoController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post()) && $diaModel->load($this->request->post())) {
 
-            try {
+            VarDumper::dump($model->diagnosi);
 
+            try {
                 $diaModel->mediaFile = UploadedFile::getInstance($diaModel, 'mediaFile');
                 $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.' . $diaModel->id . ".docx");
 
                 $diaModel->path = 'diagnosi/Diagnosi.' . $diaModel->id . ".docx";
 
-                $facadeAppuntamento = new FacadeAppuntamento();
-
-                $rows = $facadeAppuntamento->ricercaVecchieDiagnosi($model);
-
-                $diaModel->save(); //salvataggio nuova diagnosi
+                $diaModel->save();
 
                 $model->diagnosi = $diaModel->id;
-                // inserimento dell'id della diagnosi nel model dell'appuntamento
-                // in maniera tale da valorizzare la chiave esterna
-
-                $model->save(); 
-                // salvataggio del model appuntamento modificato
-                // (in questo ramo, data, ora e diagnosi potrebbero essere modificate)
-
-                $facadeAppuntamento->eliminaVecchieDiagnosi($rows);
-
             } catch (\Throwable $ex) {
-                $model->save(); 
-                // salvataggio del model appuntamento modificato
-                // (in questo ramo, solo data e ora potrebbero essere modificate)
+                $model->save();
             }
+
+            $model->save();
 
             return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
         }
@@ -200,9 +190,11 @@ class AppuntamentoController extends Controller
             $tipoAttore = $_COOKIE['CurrentActor'];
         }
 
-        $query = 'SELECT appuntamento.dataAppuntamento, appuntamento.oraAppuntamento, appuntamento.utente, diagnosi.id, diagnosi.path FROM diagnosi JOIN appuntamento ON diagnosi.id = appuntamento.diagnosi';
+        $query = 'SELECT appuntamento.dataAppuntamento, appuntamento.utente, diagnosi.id, diagnosi.path FROM diagnosi JOIN appuntamento ON diagnosi.id = appuntamento.diagnosi';
 
         $sqlDiagnosisProvider = new SqlDataProvider(['sql' => $query]);
+
+        VarDumper::dump($tipoAttore);
 
         return $this->render('show', [
             'tipoAttore' => $tipoAttore,

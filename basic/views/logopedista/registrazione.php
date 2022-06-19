@@ -116,8 +116,7 @@ else if ($attore == $CAREGIVER)
                 echo '<div class="form-group">';
                     //echo Html::submitButton('Indietro', ['class' => 'btn', 'url' => ['/logopedista/dashboardlogopedista']]);
                     echo Html::submitButton('Registra', ['class' => 'btn btn-primary mr-1', 'name' => 'contact-button']);
-                    if ($attore == $CAREGIVER || $attore == $UTENTE_AUTONOMO)
-                        echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
+                    echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
                 echo '</div>';
 
                 ActiveForm::end(); ?>
