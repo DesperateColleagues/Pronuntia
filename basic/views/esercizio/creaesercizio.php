@@ -1,13 +1,14 @@
 <?php
 
+use app\models\EsercizioModel;
 use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\helpers\VarDumper;
+use app\models\ImmagineEsercizioModel;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model EsercizioModel */
+/* @var $model ImmagineEsercizioModel */
 /* @var $tipologiaEsercizio */
+/* @var $nomeEsercizio */
 
 $this->title = 'Creazione nuovo esercizio';
 $this->params['breadcrumbs'][] = $this->title;
@@ -19,16 +20,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php
+        $form = ActiveForm::begin(['id' => 'inizia-form-nuovo-esercizio']);
 
-    //echo $form->field($model, 'nome')->textInput();
+        if ($tipologiaEsercizio == 'abb') {
 
-    if ($tipologiaEsercizio == 'abb') {
-        
-    } else if ($tipologiaEsercizio == 'let')
-    ?>
+            if ($nomeEsercizio == null) {
+
+                echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio');
+                echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine');
+                echo $form->field($model, 'file')->fileInput();
+
+                echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mb-2',  'name' => 'continue-button']);
+                }
+            } else if ($tipologiaEsercizio == 'let') {
+
+            }
+        ?>
+
+    <?php ActiveForm::end();?>
 
 
     <?php echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']); ?>
-
 
 </div>
