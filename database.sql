@@ -52,6 +52,16 @@ CREATE TABLE IF NOT EXISTS appuntamento (
   FOREIGN KEY (diagnosi) REFERENCES diagnosi(id)
 );
 
+CREATE TABLE IF NOT EXISTS esercizio (
+	nome VARCHAR(255) PRIMARY KEY,
+    path VARCHAR(255),
+    tipologia VARCHAR(255) NOT NULL,
+    testo TEXT,
+    logopedista CHAR(255) NOT NULL,
+	FOREIGN KEY (logopedista) REFERENCES logopedista(email)
+);
+
+
 
 SELECT * FROM logopedista;
 SELECT * FROM caregiver;

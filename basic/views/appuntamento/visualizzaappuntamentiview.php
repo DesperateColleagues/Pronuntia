@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\VarDumper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AppuntamentoModelSearch */
@@ -23,10 +24,9 @@ $isDeleteVisible = true;
 if ($tipoAttore == \app\models\TipoAttore::CAREGIVER)
     $isDeleteVisible = false;
 ?>
-<div class="appuntamento-model-index">
+<div class="appuntamento-model-visualizzaappuntamentiview">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -53,7 +53,17 @@ if ($tipoAttore == \app\models\TipoAttore::CAREGIVER)
                         'update' => $isDeleteVisible
                 ],
                 'urlCreator' => function ($action, AppuntamentoModel $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+                    $url = $action;
+
+                    if ($action == 'view'){
+                        $url = 'dettagliappuntamento';
+                    } else if ($action == 'update'){
+                        $url = 'aggiornaappuntamento';
+                    } else if ($action == 'delete'){
+                        $url = 'delete';
+                    }
+
+                    return Url::toRoute([$url, 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
                  }
             ],
         ],
@@ -63,8 +73,8 @@ if ($tipoAttore == \app\models\TipoAttore::CAREGIVER)
 <p>
         <?php
             if ($tipoAttore == \app\models\TipoAttore::LOGOPEDISTA) {
-                echo Html::a('Aggiungi appuntamento', ['create'], ['class' => 'btn btn-primary mr-1']); //mr-1 specifica i punti di margine da lasciare a destra del bottone. (proprietà margin CSS)
-                echo Html::a('Visualizza diagnosi inserite', ['show'], ['class' => 'btn btn-primary mr-1']);
+                echo Html::a('Aggiungi appuntamento', ['creaappuntamento'], ['class' => 'btn btn-primary mr-1']); //mr-1 specifica i punti di margine da lasciare a destra del bottone. (proprietà margin CSS)
+                echo Html::a('Visualizza diagnosi inserite', ['visualizzadiagnosi'], ['class' => 'btn btn-primary mr-1']);
                 echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore='.$tipoAttore], ['class' => 'btn btn-outline-secondary']);
                 //bottone di redirect alla dashboard del logopedista
             } else if ($tipoAttore == \app\models\TipoAttore::CAREGIVER) {

@@ -14,10 +14,10 @@ if(isset($_COOKIE['CurrentActor'])) {
     $tipoAttore = $_COOKIE['CurrentActor'];
 }
 
-Yii::error($tipoAttore);
+//Yii::error($tipoAttore);
 
 $this->title = $model->dataAppuntamento;
-$this->params['breadcrumbs'][] = ['label' => 'Appuntamento Models', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Appuntamento Models', 'url' => ['visualizzaappuntamentiview']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -91,7 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
-    <?php echo Html::a('Torna ad appuntamenti',['index','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']);
+    <?php echo Html::a('Torna ad appuntamenti',['visualizzaappuntamentiview','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']);
     ?>
 
 </div>
