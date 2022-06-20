@@ -58,7 +58,7 @@ use yii\data\SqlDataProvider;
         if (isset($_COOKIE['CurrentActor'])) {
             $tipoAttore = $_COOKIE['CurrentActor'];
         }
-        echo Html::a('Torna agli appuntamenti', ['index', 'tipoAttore' => $tipoAttore], ['class' => 'btn btn-outline-secondary']);
+        echo Html::a('Torna agli appuntamenti', ['visualizzaappuntamentiview', 'tipoAttore' => $tipoAttore], ['class' => 'btn btn-outline-secondary']);
         ?>
     </div>
 

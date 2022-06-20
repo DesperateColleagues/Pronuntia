@@ -45,7 +45,7 @@ class AppuntamentoController extends Controller
      *
      * @return string
      */
-    public function actionIndex($tipoAttore)
+    public function actionVisualizzaappuntamentiview($tipoAttore)
     {
         $searchModel = new AppuntamentoModelSearch();
         $dataProvider = $searchModel->search($this->request->queryParams, $tipoAttore);
@@ -56,7 +56,7 @@ class AppuntamentoController extends Controller
             $this->layout = 'dashcar';
         // todo: caricare utente scemo
 
-        return $this->render('index', [
+        return $this->render('visualizzaappuntamentiview', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -70,19 +70,19 @@ class AppuntamentoController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($dataAppuntamento, $oraAppuntamento, $logopedista)
+    public function actionDettagliappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
         $post = Yii::$app->request->post();
 
-        if (isset($post['confirm-button'])) {
+        if (isset($post['confirm-button'])) { //conferma registrazione dell'appuntamento da parte del caregiver
             $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
 
             if ($model->load($post) && $model->save()) {
-                return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+                return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
             }
         }
 
-        return $this->render('view', [
+        return $this->render('dettagliappuntamento', [
             'model' => $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista),
         ]);
     }
@@ -92,34 +92,34 @@ class AppuntamentoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreaappuntamento()
     {
         $model = new AppuntamentoModel();
         $this->layout = 'dashlog';
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 
-                return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+                return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
             }
         } else {
             $model->loadDefaultValues();
         }
 
-        return $this->render('create', [
+        return $this->render('creaappuntamento', [
             'model' => $model,
         ]);
     }
 
     /**
      * Updates an existing AppuntamentoModel model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * If update is successful, the browser will be redirected to the 'dettagliappuntamento' page.
      * @param string $dataAppuntamento Data AppuntamentoModel
      * @param string $oraAppuntamento Ora AppuntamentoModel
      * @param string $logopedista Logopedista
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($dataAppuntamento, $oraAppuntamento, $logopedista)
+    public function actionAggiornaappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
         $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
         
@@ -160,10 +160,10 @@ class AppuntamentoController extends Controller
                 // (in questo ramo, solo data e ora potrebbero essere modificate)
             }
 
-            return $this->redirect(['view', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+            return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
         }
 
-        return $this->render('update', [
+        return $this->render('aggiornaappuntamento', [
             'model' => $model,
             'diaModel' => $diaModel
         ]);
@@ -171,7 +171,7 @@ class AppuntamentoController extends Controller
 
     /**
      * Deletes an existing AppuntamentoModel model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * If deletion is successful, the browser will be redirected to the 'visualizzaappuntamentiview' page.
      * @param string $dataAppuntamento Data AppuntamentoModel
      * @param string $oraAppuntamento Ora AppuntamentoModel
      * @param string $logopedista Logopedista
@@ -191,10 +191,10 @@ class AppuntamentoController extends Controller
 
         Yii::error($tipoAttore);
 
-        return $this->redirect(['index?tipoAttore=' . $tipoAttore]);
+        return $this->redirect(['visualizzaappuntamentiview?tipoAttore=' . $tipoAttore]);
     }
 
-    public function actionShow()
+    public function actionVisualizzadiagnosi()
     {
         if (isset($_COOKIE['CurrentActor'])) {
             $tipoAttore = $_COOKIE['CurrentActor'];
@@ -204,7 +204,7 @@ class AppuntamentoController extends Controller
 
         $sqlDiagnosisProvider = new SqlDataProvider(['sql' => $query]);
 
-        return $this->render('show', [
+        return $this->render('visualizzadiagnosi', [
             'tipoAttore' => $tipoAttore,
             'dataProvider' => $sqlDiagnosisProvider
         ]);

@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="appuntamento-model-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
+        'action' => ['visualizzaappuntamentiview'],
         'method' => 'get',
     ]); ?>
 

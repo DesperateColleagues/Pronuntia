@@ -12,6 +12,9 @@ use yii\bootstrap4\Html;
 <div class="form-group">
     <?php
         echo "<br>Dati del logopedista loggato: ".Yii::$app->user->getId();
+
+        echo Html::a('Esercizio abb', ['/esercizio/creaesercizio?tipologiaEsercizio=abb'], ['class' => 'btn btn-outline-secondary']);
+
     ?>
 
 </div>

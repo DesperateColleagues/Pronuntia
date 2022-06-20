@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); 
     ?>
 
-    <?php echo Html::a('Torna agli appuntamenti',['index','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']); ?>
+    <?php echo Html::a('Torna agli appuntamenti',['visualizzaappuntamentiview','tipoAttore' => $tipoAttore],['class' => 'btn btn-outline-secondary']); ?>
 
 
 </div>
