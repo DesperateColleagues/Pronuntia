@@ -31,9 +31,9 @@ $this->params['breadcrumbs'][] = $this->title;
             echo $form->field($model, 'file')->fileInput();
 
             echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
-        } else if($nomeEsercizio != null) {
+        } else if ($nomeEsercizio != null) {
 
-            echo $form->field($model, 'nomeEsercizio')->textInput()->label($nomeEsercizio);
+            echo $form->field($model, 'nomeEsercizio')->textInput(['readonly' => true, 'value' => $nomeEsercizio]);
             echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine');
             echo $form->field($model, 'file')->fileInput();
 
@@ -41,6 +41,22 @@ $this->params['breadcrumbs'][] = $this->title;
             echo Html::submitButton('Termina inserimento', ['class' => 'btn btn-primary',  'name' => 'end-button']);
         }
     } else if ($tipologiaEsercizio == 'let') {
+
+        $esModel = new EsercizioModel();
+        echo $form->field($esModel, 'nome')->textInput()->label('Nome esercizio');
+        echo $form->field($esModel, 'testo')->textInput()->label('Testo');
+
+        $hiddenFieldLogopedista = $form->field($esModel, 'logopedista')
+            ->hiddenInput(['value' => Yii::$app->user->getId()])->label(false);
+
+        echo $hiddenFieldLogopedista;
+
+        $hiddenFieldTipologia = $form->field($esModel, 'tipologia')
+            ->hiddenInput(['value' => 'let'])->label(false);
+
+        echo $hiddenFieldTipologia;
+
+        echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
     }
     ?>
 
