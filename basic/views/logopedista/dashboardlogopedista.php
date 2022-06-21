@@ -14,6 +14,7 @@ use yii\bootstrap4\Html;
         echo "<br>Dati del logopedista loggato: ".Yii::$app->user->getId();
 
         echo Html::a('Esercizio abb', ['/esercizio/creaesercizio?tipologiaEsercizio=abb'], ['class' => 'btn btn-outline-secondary']);
+        echo Html::a('Esercizio let', ['/esercizio/creaesercizio?tipologiaEsercizio=let'], ['class' => 'btn btn-outline-secondary']);
 
     ?>
 
