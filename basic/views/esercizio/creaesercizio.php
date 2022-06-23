@@ -25,20 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
     if ($tipologiaEsercizio == 'abb') {
 
         if ($nomeEsercizio == null) {
-
             echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio');
-            echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine');
-            echo $form->field($model, 'file')->fileInput();
-
-            echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
-        } else if ($nomeEsercizio != null) {
-
+            echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'confirm-button']);
+        } else {
+            echo '<p>';
+            echo '<li>Premere il bottone <b>Continua inserimento</b> per inserire le immagini</li>';
+            echo '<li>Premere il bottone <b>Torna alla dashboard</b> per terminare</li>';
+            echo '</p>';
             echo $form->field($model, 'nomeEsercizio')->textInput(['readonly' => true, 'value' => $nomeEsercizio]);
-            echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine');
+            echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine - Soluzione esercizio');
             echo $form->field($model, 'file')->fileInput();
 
-            echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
-            echo Html::submitButton('Termina inserimento', ['class' => 'btn btn-primary',  'name' => 'end-button']);
+            echo Html::submitButton('Continua inserimento', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
+            //echo Html::submitButton('Termina inserimento', ['class' => 'btn btn-primary',  'name' => 'end-button']);
         }
     } else if ($tipologiaEsercizio == 'let') {
 
@@ -63,6 +62,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php ActiveForm::end(); ?>
 
 
-    <?php echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']); ?>
+<?php
+    echo '<br>';
+    echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
+?>
 
 </div>

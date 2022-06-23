@@ -61,12 +61,11 @@ CREATE TABLE IF NOT EXISTS esercizio (
 	FOREIGN KEY (logopedista) REFERENCES logopedista(email)
 );
 
-
-
 SELECT * FROM logopedista;
 SELECT * FROM caregiver;
 SELECT * FROM utente;
-
+SELECT * FROM esercizio;
+DELETE FROM esercizio WHERE nome = 'Es4';
 /*DROP TABLE utente;
 DROP TABLE caregiver;
 DROP TABLE logopedista;*/
