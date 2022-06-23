@@ -90,7 +90,6 @@ class SiteController extends Controller
 
         if ($res == TipoAttore::LOGOPEDISTA) {
             $this->redirect('/logopedista/dashboardlogopedista?tipoAttore=' . $res);
-            //return $this->render('@app/views/logopedista/dashboardlogopedista');
         } else if ($res == TipoAttore::CAREGIVER) {
             //$this->layout = 'dashcar';
             $cookie_name = "caregiver";
