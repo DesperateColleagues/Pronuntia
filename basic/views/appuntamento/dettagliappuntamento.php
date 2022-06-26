@@ -30,8 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             if ($tipoAttore == \app\models\TipoAttore::LOGOPEDISTA){
                 $diaModel = new DiagnosiModel();
+
+                Yii::error($model->attributes);
                 echo Html::a('Update',
-                    ['update',
+                    ['aggiornaappuntamento',
                         'dataAppuntamento' => $model->dataAppuntamento,
                         'oraAppuntamento' => $model->oraAppuntamento,
                         'logopedista' => $model->logopedista,

@@ -22,6 +22,8 @@ use yii\helpers\VarDumper;
 class AppuntamentoController extends Controller
 {
 
+    private $facadeAppuntamento;
+
     /**
      * @inheritDoc
      */
@@ -72,18 +74,28 @@ class AppuntamentoController extends Controller
      */
     public function actionDettagliappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
+        $this->facadeAppuntamento = new FacadeAppuntamento();
+
         $post = Yii::$app->request->post();
 
         if (isset($post['confirm-button'])) { //conferma registrazione dell'appuntamento da parte del caregiver
-            $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
 
-            if ($model->load($post) && $model->save()) {
-                return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+            $dataAppuntamento = $this->facadeAppuntamento->getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)->dataAppuntamento;
+            $oraAppuntamento = $this->facadeAppuntamento->getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)->oraAppuntamento;
+            $logopedista = $this->facadeAppuntamento->getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)->logopedista;
+
+            if ($this->facadeAppuntamento->modificaAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista, $post)) {
+                return $this->redirect([
+                    'dettagliappuntamento',
+                    'dataAppuntamento' => $dataAppuntamento,
+                    'oraAppuntamento' => $oraAppuntamento,
+                    'logopedista' => $logopedista
+                ]);
             }
         }
 
         return $this->render('dettagliappuntamento', [
-            'model' => $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista),
+            'model' => $this->facadeAppuntamento->getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
         ]);
     }
 
@@ -94,20 +106,28 @@ class AppuntamentoController extends Controller
      */
     public function actionCreaappuntamento()
     {
-        $model = new AppuntamentoModel();
+
+        $this->facadeAppuntamento = new FacadeAppuntamento();
+
         $this->layout = 'dashlog';
+
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                
-                return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+
+            $post = $this->request->post();
+
+            if ($this->facadeAppuntamento->aggiungiAppuntamento($post)) {
+                return $this->redirect([
+                    'dettagliappuntamento',
+                    'dataAppuntamento' => $this->facadeAppuntamento->getDataAppuntamento($post),
+                    'oraAppuntamento' => $this->facadeAppuntamento->getOraAppuntamento($post),
+                    'logopedista' => $this->facadeAppuntamento->getLogopedista($post)
+                ]);
             }
         } else {
-            $model->loadDefaultValues();
+            return $this->render('creaappuntamento', [
+                'model' => $this->facadeAppuntamento->defaultModel(),
+            ]);
         }
-
-        return $this->render('creaappuntamento', [
-            'model' => $model,
-        ]);
     }
 
     /**
@@ -121,51 +141,37 @@ class AppuntamentoController extends Controller
      */
     public function actionAggiornaappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
-        $model = $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista);
+        $this->facadeAppuntamento = new FacadeAppuntamento();
         
-        $facadeAppuntamento = new FacadeAppuntamento();
-        
-        $rows = $facadeAppuntamento->ricercaVecchieDiagnosi($model);
-
-        $diaModel = new DiagnosiModel();
+        $post = $this->request->post();
 
         if (isset($_COOKIE['CurrentActor'])) {
             $tipoAttore = $_COOKIE['CurrentActor'];
         }
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $diaModel->load($this->request->post())) {
+        if ($this->request->isPost) {
 
             try {
 
-                $diaModel->mediaFile = UploadedFile::getInstance($diaModel, 'mediaFile');
-                $diaModel->mediaFile->saveAs('diagnosi/Diagnosi.' . $diaModel->id . ".docx");
-
-                $diaModel->path = 'diagnosi/Diagnosi.' . $diaModel->id . ".docx";
-
-                $diaModel->save(); //salvataggio nuova diagnosi
-
-                $model->diagnosi = $diaModel->id;
-                // inserimento dell'id della diagnosi nel model dell'appuntamento
-                // in maniera tale da valorizzare la chiave esterna
-
-                $model->save(); 
-                // salvataggio del model appuntamento modificato
-                // (in questo ramo, data, ora e diagnosi potrebbero essere modificate)
-
-                $facadeAppuntamento->eliminaVecchieDiagnosi($rows);
+                $this->facadeAppuntamento->allegaDiagnosi($dataAppuntamento, $oraAppuntamento, $logopedista, $post);
 
             } catch (\Throwable $ex) {
-                $model->save(); 
+                $this->facadeAppuntamento->modificaAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista, $post);
                 // salvataggio del model appuntamento modificato
                 // (in questo ramo, solo data e ora potrebbero essere modificate)
             }
 
-            return $this->redirect(['dettagliappuntamento', 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
+            return $this->redirect([
+                'dettagliappuntamento',
+                'dataAppuntamento' => $this->facadeAppuntamento->getDataAppuntamento($post),
+                'oraAppuntamento' => $this->facadeAppuntamento->getOraAppuntamento($post),
+                'logopedista' => $this->facadeAppuntamento->getLogopedista($post)
+            ]);
         }
 
         return $this->render('aggiornaappuntamento', [
-            'model' => $model,
-            'diaModel' => $diaModel
+            'model' => $this->facadeAppuntamento->getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista),
+            'diaModel' => new DiagnosiModel()
         ]);
     }
 
@@ -181,17 +187,18 @@ class AppuntamentoController extends Controller
 
     public function actionDelete($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
-        $this->findModel($dataAppuntamento, $oraAppuntamento, $logopedista)->delete();
+        $this->facadeAppuntamento = new FacadeAppuntamento();
+
+        $this->facadeAppuntamento->eliminaAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista);
 
         $tipoAttore = '';
 
         if (isset($_COOKIE['CurrentActor'])) {
             $tipoAttore = $_COOKIE['CurrentActor'];
+            return $this->redirect(['visualizzaappuntamentiview?tipoAttore=' . $tipoAttore]);
+        } else {
+            // return fuori dall'app o ad un messaggio di errore? return $this->redirect(['visualizzaappuntamentiview?tipoAttore=' . $tipoAttore]);
         }
-
-        Yii::error($tipoAttore);
-
-        return $this->redirect(['visualizzaappuntamentiview?tipoAttore=' . $tipoAttore]);
     }
 
     public function actionVisualizzadiagnosi()
@@ -210,22 +217,4 @@ class AppuntamentoController extends Controller
         ]);
     }
 
-
-    /**
-     * Finds the AppuntamentoModel model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $dataAppuntamento Data AppuntamentoModel
-     * @param string $oraAppuntamento Ora AppuntamentoModel
-     * @param string $logopedista Logopedista
-     * @return AppuntamentoModel the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($dataAppuntamento, $oraAppuntamento, $logopedista)
-    {
-        if (($model = AppuntamentoModel::findOne(['dataAppuntamento' => $dataAppuntamento, 'oraAppuntamento' => $oraAppuntamento, 'logopedista' => $logopedista])) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
 }
