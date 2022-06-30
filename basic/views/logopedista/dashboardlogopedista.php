@@ -11,12 +11,12 @@ use yii\bootstrap4\Html;
 
 <div class="form-group">
     <?php
-        echo "<br>Dati del logopedista loggato: ".Yii::$app->user->getId();
-        echo '<br><br>';
-        echo Html::a('Esercizio abb', ['/esercizio/creaesercizio?tipologiaEsercizio=abb'], ['class' => 'btn btn-outline-secondary']);
-        echo '<br><br>';
-        echo Html::a('Esercizio let', ['/esercizio/creaesercizio?tipologiaEsercizio=let'], ['class' => 'btn btn-outline-secondary']);
-
+        echo "<br>Benvenuto: ".Yii::$app->user->getId();
+        echo '<br><br><h3>Opzioni</h3>';
+        echo Html::a('Esercizio abbinamento', ['/esercizio/creaesercizioview?tipologiaEsercizio=abb'], ['class' => 'btn btn-primary mr-2']);
+        echo Html::a('Esercizio lettura', ['/esercizio/creaesercizioview?tipologiaEsercizio=let'], ['class' => 'btn btn-primary mr-2']);
+        echo Html::a('Visualizza esercizi', ['/esercizio/visualizzaeserciziview'], ['class' => 'btn btn-primary mr-2']);
+        echo Html::a('Crea SerieModel', ['/esercizio/creaserieview'], ['class' => 'btn btn-primary mr-2']);
     ?>
 
 </div>

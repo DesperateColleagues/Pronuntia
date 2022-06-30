@@ -66,7 +66,6 @@ class AppuntamentoModelSearch extends AppuntamentoModel
                 ->andFilterWhere(['like', 'utente', $this->utente])
                 ->andFilterWhere(['like', 'caregiver', $this->caregiver]);
         } else if ($tipoAttore == TipoAttore::CAREGIVER){
-                //$query->where("caregiver = '".$_COOKIE['caregiver']."'");
                 $query->where('utente IS NULL');
         }
 

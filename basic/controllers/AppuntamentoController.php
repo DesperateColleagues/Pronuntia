@@ -12,6 +12,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use Yii;
 use yii\data\SqlDataProvider;
+use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\helpers\VarDumper;
 
@@ -56,7 +57,6 @@ class AppuntamentoController extends Controller
             $this->layout = 'dashlog';
         else if ($tipoAttore == TipoAttore::CAREGIVER)
             $this->layout = 'dashcar';
-        // todo: caricare utente scemo
 
         return $this->render('visualizzaappuntamentiview', [
             'searchModel' => $searchModel,
@@ -69,7 +69,7 @@ class AppuntamentoController extends Controller
      * @param string $dataAppuntamento Data AppuntamentoModel
      * @param string $oraAppuntamento Ora AppuntamentoModel
      * @param string $logopedista Logopedista
-     * @return string
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDettagliappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
@@ -102,7 +102,7 @@ class AppuntamentoController extends Controller
     /**
      * Creates a new AppuntamentoModel model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      */
     public function actionCreaappuntamento()
     {
@@ -136,7 +136,7 @@ class AppuntamentoController extends Controller
      * @param string $dataAppuntamento Data AppuntamentoModel
      * @param string $oraAppuntamento Ora AppuntamentoModel
      * @param string $logopedista Logopedista
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionAggiornaappuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
@@ -181,7 +181,7 @@ class AppuntamentoController extends Controller
      * @param string $dataAppuntamento Data AppuntamentoModel
      * @param string $oraAppuntamento Ora AppuntamentoModel
      * @param string $logopedista Logopedista
-     * @return \yii\web\Response
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      */
 

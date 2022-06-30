@@ -3,23 +3,16 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Exception;
+use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 class FacadeAppuntamento
 {
 
-    private $model;
-    private $diaModel;
-
-    public function getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
-    {
-        if (($this->model = AppuntamentoModel::findOne(['dataAppuntamento' => $dataAppuntamento, 'oraAppuntamento' => $oraAppuntamento, 'logopedista' => $logopedista])) !== null) {
-            return $this->model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+    private $model; // AppuntamentoModel
+    private $diaModel; // DiagnosiModel
 
     public function aggiungiAppuntamento($post)
     {
@@ -30,6 +23,10 @@ class FacadeAppuntamento
         }
     }
 
+    /**
+     * @throws StaleObjectException
+     * @throws NotFoundHttpException
+     */
     public function eliminaAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
     {
         $this->model = new AppuntamentoModel();
@@ -47,6 +44,9 @@ class FacadeAppuntamento
         return $this->model;
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function modificaAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista, $post)
     {
         $this->model = new AppuntamentoModel();
@@ -58,6 +58,10 @@ class FacadeAppuntamento
         }
     }
 
+    /**
+     * @throws Exception
+     * @throws NotFoundHttpException
+     */
     public function allegaDiagnosi($dataAppuntamento, $oraAppuntamento, $logopedista, $post)
     {
         $this->model = new AppuntamentoModel();
@@ -100,6 +104,9 @@ class FacadeAppuntamento
             ->all();
     }
 
+    /**
+     * @throws Exception
+     */
     public function eliminaVecchieDiagnosi($rows)
     {
 
@@ -137,5 +144,17 @@ class FacadeAppuntamento
         $this->model->load($params);
 
         return $this->model->logopedista;
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function getAppuntamento($dataAppuntamento, $oraAppuntamento, $logopedista)
+    {
+        if (($this->model = AppuntamentoModel::findOne(['dataAppuntamento' => $dataAppuntamento, 'oraAppuntamento' => $oraAppuntamento, 'logopedista' => $logopedista])) !== null) {
+            return $this->model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
