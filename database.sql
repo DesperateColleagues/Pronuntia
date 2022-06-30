@@ -59,6 +59,24 @@ CREATE TABLE IF NOT EXISTS esercizio (
     testo TEXT,
     logopedista CHAR(255) NOT NULL,
 	FOREIGN KEY (logopedista) REFERENCES logopedista(email)
+
+);
+
+CREATE TABLE IF NOT EXISTS serie (
+	nomeSerie VARCHAR(60) PRIMARY KEY,
+    logopedista CHAR(255) NOT NULL,
+	utente CHAR(255) NULL,
+    dataAssegnazione DATE,
+	FOREIGN KEY (logopedista) REFERENCES logopedista(email),
+	FOREIGN KEY (utente) REFERENCES utente(username)
+);
+
+CREATE TABLE IF NOT EXISTS composizioneSerie(
+	serie VARCHAR(60) NOT NULL,
+    esercizio VARCHAR(255),
+    PRIMARY KEY (serie, esercizio),
+    FOREIGN KEY (serie) REFERENCES serie(nomeSerie),
+    FOREIGN KEY (esercizio) REFERENCES esercizio(nome)
 );
 
 SELECT * FROM logopedista;
@@ -66,6 +84,9 @@ SELECT * FROM caregiver;
 SELECT * FROM utente;
 SELECT * FROM esercizio;
 DELETE FROM esercizio WHERE nome = 'Es4';
+
 /*DROP TABLE utente;
 DROP TABLE caregiver;
-DROP TABLE logopedista;*/
+DROP TABLE logopedista;
+DROP TABLE serie;
+DROP TABLE composizioneSerie;*/

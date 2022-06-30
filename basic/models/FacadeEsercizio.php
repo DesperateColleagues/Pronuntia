@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
 class FacadeEsercizio
@@ -24,8 +25,9 @@ class FacadeEsercizio
 
     /**
      * Aggiunge un immagine per l'esercizio di abbinamento
+     *
     */
-    public function aggiungiImmagine(){
+    public function aggiungiImmagineDaForm(){
         $file = UploadedFile::getInstance($this->iem, 'file');
         $file->saveAs('esercizi/'.$this->iem->nomeEsercizio.'/'. $this->iem->nomeImmagine. '.jpg');
     }
@@ -57,6 +59,73 @@ class FacadeEsercizio
         } else {
             return false;
         }
+    }
+
+    /**
+     * Restituisce tutti gli esercizi inseriti nel DB
+     *
+     * @param string $tipo tipologia di esercizio
+     *
+     * @return ActiveDataProvider
+    */
+    public function getAllEserciziByTipo($tipo){
+        return new ActiveDataProvider([
+            'query' => EsercizioModel::find()->where(['tipologia' => $tipo]),
+        ]);
+    }
+
+    /**
+     * Restituisce la tupla dell'esercizio corrispondente al nome passato in input
+     *
+     * @param string $nome nome dell'esercizio
+     *
+     * @return ActiveDataProvider
+    */
+    public function getEsercizioByNome($nome){
+        return new ActiveDataProvider([
+            'query' => EsercizioModel::find()->where(['nome' => $nome]),
+            ]
+        );
+    }
+
+    /**
+     * Salva su database la serie
+     *
+     * @param array $serieParams
+     * @return bool
+    */
+    public function salvaSerieEsercizi($serieParams){
+        $model = new SerieModel();
+        $model->load($serieParams);
+        return $model->save();
+    }
+
+    /**
+     * Aggiunge gli esercizi alla serie e la salva su database
+     *
+     * @param array $esercizi  array contenente gli esercizi da aggiungere alla serie
+     * @param string $nomeSerie nome della serie
+     *
+     * @return bool risultato dell'inserimento
+    */
+    public function aggiungiEserciziToSerie($esercizi, $nomeSerie){
+        $ret = true;
+
+        for ($i = 0; $i < sizeof($esercizi); $i++){
+            $model = new ComposizioneserieModel();
+            $model->esercizio = $esercizi[$i];
+            $model->serie = $nomeSerie;
+
+            \Yii::error( $model->serie);
+            \Yii::error($model->esercizio);
+
+            $ret = $model->save();
+
+            if (!$ret)
+                break;
+        }
+
+        return $ret;
     }
 
     /**

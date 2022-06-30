@@ -6,6 +6,7 @@ use app\models\EsercizioModel;
 use app\models\FacadeAccount;
 use app\models\FacadeEsercizio;
 use app\models\ImmagineEsercizioModel;
+use app\models\SerieModel;
 use yii\web\UploadedFile;
 use Yii;
 use yii\helpers\VarDumper;
@@ -13,27 +14,25 @@ use yii\helpers\VarDumper;
 class EsercizioController extends \yii\web\Controller
 {
 
-    private $facadeEsercizio;
-
-    public function actionCreaesercizio($tipologiaEsercizio = 'abb')
+    public function actionCreaesercizioview($tipologiaEsercizio = 'abb')
     {
+        $this->layout = 'dashlog'; // carica il layout del logopedista
+        $facadeEsercizio = new FacadeEsercizio();
+
+        // crea la directory esercizi
+        // todo: spostare nel costruttore di facade
         $path = realpath("esercizi");
-        $this->facadeEsercizio = new FacadeEsercizio();
 
         if (!$path || !is_dir($path)) {
             mkdir($directory = "esercizi", $recursive = true);
         }
 
-        $this->layout = 'dashlog';
-
-        $post = Yii::$app->request->post();
-
-        Yii::error($post);
+        $post = Yii::$app->request->post(); // recupera il post
 
         if ($tipologiaEsercizio == 'let') {
 
             if (!empty($post)) {
-                $isSaved = $this->facadeEsercizio->salvaEsercizio(
+                $isSaved = $facadeEsercizio->salvaEsercizio(
                     $post['EsercizioModel']['nome'], // nome esercizio
                     $tipologiaEsercizio, // tipologia
                     null,
@@ -47,7 +46,7 @@ class EsercizioController extends \yii\web\Controller
             }
 
             return $this->render(
-                'creaesercizio',
+                'creaesercizioview',
                 [
                     'tipologiaEsercizio' => $tipologiaEsercizio,
                     'nomeEsercizio' => null,
@@ -58,11 +57,11 @@ class EsercizioController extends \yii\web\Controller
         } else if ($tipologiaEsercizio == 'abb') {
 
             // istanzia il model e restituisce il nome dell'esercizio
-            $nomeEsercizio = $this->facadeEsercizio->getNomeEsercizio($post);
+            $nomeEsercizio = $facadeEsercizio->getNomeEsercizio($post);
 
             if (isset($post['confirm-button'])) {
                 // crea l'esercizio sul database attraverso la facade senza accedere direttamente al model
-               $isSaved = $this->facadeEsercizio->salvaEsercizio(
+               $isSaved = $facadeEsercizio->salvaEsercizio(
                         $nomeEsercizio, // nome esercizio
                         $tipologiaEsercizio, // tipologia
                         "esercizi/$nomeEsercizio", // path esercizio di abbinamento
@@ -72,7 +71,7 @@ class EsercizioController extends \yii\web\Controller
 
                if ($isSaved){
                     return $this->render(
-                        'creaesercizio',
+                        'creaesercizioview',
                         [
                             'tipologiaEsercizio' => $tipologiaEsercizio,
                             'nomeEsercizio' => $nomeEsercizio,
@@ -85,10 +84,10 @@ class EsercizioController extends \yii\web\Controller
                 }
 
             } else if (isset($post['continue-button'])) {
-                $this->facadeEsercizio->aggiungiImmagine();
+                $facadeEsercizio->aggiungiImmagineDaForm();
 
                 return $this->render(
-                    'creaesercizio',
+                    'creaesercizioview',
                     [
                         'tipologiaEsercizio' => $tipologiaEsercizio,
                         'nomeEsercizio' => $nomeEsercizio,
@@ -99,12 +98,41 @@ class EsercizioController extends \yii\web\Controller
         }
 
         return $this->render(
-            'creaesercizio',
+            'creaesercizioview',
             [
                 'tipologiaEsercizio' => $tipologiaEsercizio,
                 'nomeEsercizio' => null,
                 'model' => new ImmagineEsercizioModel(),
             ]
         );
+    }
+
+    public function actionVisualizzaeserciziview($nomeSerie = 'def'){
+        $this->layout = 'dashlog'; // carica il layout del logopedista
+        $facade = new FacadeEsercizio();
+        $postField = 'selection';
+
+        if ($nomeSerie != 'def' && !empty(Yii::$app->request->post($postField))) {
+            Yii::error(Yii::$app->request->post($postField));
+            Yii::error($facade->aggiungiEserciziToSerie(Yii::$app->request->post($postField), $nomeSerie));
+        }
+
+        return $this->render('visualizzaeserciziview', [
+                'dataProviderAbb' => $facade->getAllEserciziByTipo('abb'),
+                'dataProviderText' => $facade->getAllEserciziByTipo('let')
+            ]
+        );
+    }
+
+    public function actionCreaserieview(){
+        $this->layout = 'dashlog'; // carica il layout del logopedista
+        $post = Yii::$app->request->post();
+        $facade = new FacadeEsercizio();
+        if ($facade->salvaSerieEsercizi($post)){
+            return $this->redirect('visualizzaeserciziview?nomeSerie='.$post['SerieModel']['nomeSerie']);
+        } else {
+            Yii::error("Serie non create");
+        }
+        return $this->render('creaserieview', ['model' => new SerieModel()]);
     }
 }

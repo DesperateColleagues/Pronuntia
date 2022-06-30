@@ -28,46 +28,51 @@ if ($tipoAttore == \app\models\TipoAttore::CAREGIVER)
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'rowOptions' => function($model){ //dovrebbe colorare di rosso o di verde le tuple ma non funziona, lol
-            if ($model->utente == null) {
-                return ['class'=>'danger'];
-            } else {
-                return ['class'=>'success'];
-            }
-        },
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <?php  try {
+        echo GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'rowOptions' => function ($model) {
+                if ($model->utente == null) {
+                    return ['class' => 'danger'];
+                } else {
+                    return ['class' => 'success'];
+                }
+            },
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'dataAppuntamento',
-            'oraAppuntamento',
-            'logopedista',
-            'utente',
-            'caregiver',
-            [
-                'class' => ActionColumn::className(),
-                'visibleButtons' => [
+                'dataAppuntamento',
+                'oraAppuntamento',
+                'logopedista',
+                'utente',
+                'caregiver',
+                [
+                    'class' => ActionColumn::className(),
+                    'visibleButtons' => [
                         'delete' => $isDeleteVisible,
                         'update' => $isDeleteVisible
-                ],
-                'urlCreator' => function ($action, AppuntamentoModel $model, $key, $index, $column) {
-                    $url = $action;
+                    ],
+                    'urlCreator' => function ($action, AppuntamentoModel $model, $key, $index, $column) {
+                        $url = $action;
 
-                    if ($action == 'view'){
-                        $url = 'dettagliappuntamento';
-                    } else if ($action == 'update'){
-                        $url = 'aggiornaappuntamento';
-                    } else if ($action == 'delete'){
-                        $url = 'delete';
+                        if ($action == 'view') {
+                            $url = 'dettagliappuntamento';
+                        } else if ($action == 'update') {
+                            $url = 'aggiornaappuntamento';
+                        } else if ($action == 'delete') {
+                            $url = 'delete';
+                        }
+                        return Url::toRoute([$url, 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
                     }
-
-                    return Url::toRoute([$url, 'dataAppuntamento' => $model->dataAppuntamento, 'oraAppuntamento' => $model->oraAppuntamento, 'logopedista' => $model->logopedista]);
-                 }
+                ],
             ],
-        ],
-    ]); ?>
+        ]);
+    } catch (Exception $e) {
+        echo '<h2> Non sono stati trovati appuntamenti con i parametri inseriti </h2>';
+        echo Html::a('Visualizza Appuntamento', ['visualizzaappuntamentiview?tipoAttore='.$tipoAttore], ['class' => 'btn btn-primary mb-1']); //mr-1 specifica i punti di margine da lasciare a destra del bottone. (proprietà margin CSS)
+    }
+    ?>
 
     
 <p>
