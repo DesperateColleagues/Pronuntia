@@ -15,8 +15,8 @@ use yii\bootstrap4\Html;
         echo '<br><br><h3>Opzioni</h3>';
         echo Html::a('Esercizio abbinamento', ['/esercizio/creaesercizioview?tipologiaEsercizio=abb'], ['class' => 'btn btn-primary mr-2']);
         echo Html::a('Esercizio lettura', ['/esercizio/creaesercizioview?tipologiaEsercizio=let'], ['class' => 'btn btn-primary mr-2']);
-        echo Html::a('Visualizza esercizi', ['/esercizio/visualizzaeserciziview'], ['class' => 'btn btn-primary mr-2']);
-        echo Html::a('Crea SerieModel', ['/esercizio/creaserieview'], ['class' => 'btn btn-primary mr-2']);
+        echo Html::a('Crea Serie', ['/esercizio/creaserieview'], ['class' => 'btn btn-primary mr-2']);
+        echo Html::a('Assegna Serie', ['/esercizio/assegnaserieview'], ['class' => 'btn btn-primary mr-2']);
     ?>
 
 </div>
