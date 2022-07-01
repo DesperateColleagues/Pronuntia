@@ -34,8 +34,24 @@ class EsercizioModelSearch extends EsercizioModel
      * @return ActiveDataProvider
      */
     public function search($params){
-        return  new ActiveDataProvider([
-            'query' => EsercizioModel::find(),
+        $query = EsercizioModel::find();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
         ]);
+
+        \Yii::error($params);
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            //$query->where('0=1');
+            return $dataProvider;
+        }
+
+        $query->andFilterWhere(['nome' => $this->nome]);
+        $query->andFilterWhere(['like', 'logopedista', $this->logopedista])
+            ->andFilterWhere(['like', 'tipologia', $this->tipologia]);
+
+        return $dataProvider;
     }
 }

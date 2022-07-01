@@ -3,6 +3,8 @@
 namespace app\models;
 
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
 class FacadeEsercizio
@@ -64,13 +66,11 @@ class FacadeEsercizio
     /**
      * Restituisce tutti gli esercizi inseriti nel DB
      *
-     * @param string $tipo tipologia di esercizio
-     *
      * @return ActiveDataProvider
-    */
-    public function getAllEserciziByTipo($tipo){
+     */
+    public function getAllEsercizi(){
         return new ActiveDataProvider([
-            'query' => EsercizioModel::find()->where(['tipologia' => $tipo]),
+            'query' => EsercizioModel::find()
         ]);
     }
 
@@ -89,6 +89,28 @@ class FacadeEsercizio
     }
 
     /**
+     * Restituisce tutte le serie inserite nel db come array
+     *
+     * @return array le serie inserite
+    */
+    public function getAllSerie(){
+        return ArrayHelper::toArray(SerieModel::find()
+            ->where(['logopedista' => \Yii::$app->user->id])
+            ->all());
+    }
+
+    /**
+     * Restituisce tutte gli utenti inserite nel db come array
+     *
+     * @return array utenti inseriti
+     */
+    public function getAllUtenti(){
+        return ArrayHelper::toArray(UtenteModel::find()
+            ->where(['logopedista' => \Yii::$app->user->id])
+            ->all());
+    }
+
+    /**
      * Salva su database la serie
      *
      * @param array $serieParams
@@ -97,6 +119,16 @@ class FacadeEsercizio
     public function salvaSerieEsercizi($serieParams){
         $model = new SerieModel();
         $model->load($serieParams);
+        return $model->save();
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function assegnaSerieEserciziToUtente($utente, $nomeSerie){
+        $model = $this->findModelSerie($nomeSerie);
+        $model->utente = $utente;
+        $model->dataAssegnazione = date('Y-m-d');
         return $model->save();
     }
 
@@ -145,6 +177,18 @@ class FacadeEsercizio
         }
 
         return $ret;
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     */
+    protected function findModelSerie($id)
+    {
+        if (($model = SerieModel::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
 }

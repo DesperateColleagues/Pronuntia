@@ -7,6 +7,9 @@ use app\models\FacadeAccount;
 use app\models\FacadeEsercizio;
 use app\models\ImmagineEsercizioModel;
 use app\models\SerieModel;
+use app\models\UtenteModel;
+use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use Yii;
 use yii\helpers\VarDumper;
@@ -111,15 +114,28 @@ class EsercizioController extends \yii\web\Controller
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $facade = new FacadeEsercizio();
         $postField = 'selection';
+        Yii::error(Yii::$app->request->post());
+
+        if (Yii::$app->request->post('ricercaEsercizi') !== null){
+            $post = Yii::$app->request->post();
+            $nomeEsercizio = $post['EsercizioModel']['nome'];
+            return $this->render('visualizzaeserciziview', [
+                    'dataProvider' => $facade->getEsercizioByNome($nomeEsercizio),
+                ]
+            );
+        }
 
         if ($nomeSerie != 'def' && !empty(Yii::$app->request->post($postField))) {
             Yii::error(Yii::$app->request->post($postField));
-            Yii::error($facade->aggiungiEserciziToSerie(Yii::$app->request->post($postField), $nomeSerie));
+
+            if ($facade->aggiungiEserciziToSerie(Yii::$app->request->post($postField), $nomeSerie)){
+                // todo: inserisci alert
+            }
+
         }
 
         return $this->render('visualizzaeserciziview', [
-                'dataProviderAbb' => $facade->getAllEserciziByTipo('abb'),
-                'dataProviderText' => $facade->getAllEserciziByTipo('let')
+                'dataProvider' => $facade->getAllEsercizi(),
             ]
         );
     }
@@ -135,4 +151,26 @@ class EsercizioController extends \yii\web\Controller
         }
         return $this->render('creaserieview', ['model' => new SerieModel()]);
     }
+
+    public function actionAssegnaserieview(){
+        $this->layout = 'dashlog'; // carica il layout del logopedista
+        $post = Yii::$app->request->post();
+        $facade = new FacadeEsercizio();
+
+        if (Yii::$app->request->post('assegnaSerie') !== null){
+            Yii::error($post['UtenteModel']['username']);
+            Yii::error($post['SerieModel']['nomeSerie']);
+            Yii::error(date('Y-m-d'));
+            Yii::error($facade->assegnaSerieEserciziToUtente($post['UtenteModel']['username'], $post['SerieModel']['nomeSerie']));
+        }
+
+        return $this->render('assegnaserieview', [
+            'modelUtente' => new UtenteModel(),
+            'modelSerie' => new SerieModel(),
+            'utenti' => $facade->getAllUtenti(),
+            'serie' => $facade->getAllSerie()
+        ]);
+    }
+
+
 }

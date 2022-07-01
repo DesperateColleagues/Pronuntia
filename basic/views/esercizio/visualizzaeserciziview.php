@@ -1,16 +1,20 @@
 <?php
-/** @var yii\web\View $this */
-/* @var $dataProviderAbb yii\data\ActiveDataProvider */
-/* @var $dataProviderText yii\data\ActiveDataProvider */
-
-use yii\grid\ActionColumn;
+use app\models\EsercizioModelSearch;
 use yii\helpers\Html;
+
+/** @var yii\web\View $this */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 ?>
 <?php
 
 ?>
 <?php
 
+echo '<h3>Ricerca esercizio</h3>';
+$form = \yii\widgets\ActiveForm::begin();
+echo $form->field(new \app\models\EsercizioModel(), 'nome')->textInput()->label("Nome esercizio");
+echo Html::submitButton('Ricerca', ['class' => 'btn btn-primary mr-1',  'name' => 'ricercaEsercizi']);
+$form::end();
 echo Html::beginForm();
 /**
  * @throws Exception
@@ -29,23 +33,18 @@ function gridviewCustom($data){
 ]);
 }
 
-echo '<h3>Esercizi abbinamento</h3>';
+echo '<br>';
+echo '<h3>Lista esercizi</h3>';
 
 try {
-    echo gridviewCustom($dataProviderAbb);
+    echo gridviewCustom($dataProvider);
 } catch (Exception $e) {
     Yii::error($e->getMessage());
 }
 
-echo '<h3>Esercizi lettura</h3>';
 
-try {
-    echo gridviewCustom($dataProviderText);
-} catch (Exception $e) {
-    Yii::error($e->getMessage());
-}
-
-echo Html::submitButton('Submittami tutto', ['class' => 'btn btn-primary mr-1',  'name' => 'selezionaEsercizi']);
+echo Html::submitButton('Conferma inserimento', ['class' => 'btn btn-primary mr-2',  'name' => 'selezionaEsercizi']);
+echo Html::a('Torna a crea serie', ['/esercizio/creaserieview'], ['class' => 'btn btn-outline-secondary mr-2']);
 echo Html::endForm();
 
 // NON MODIFICARE SENNO' NON FUNZIONA UN CAZZO
