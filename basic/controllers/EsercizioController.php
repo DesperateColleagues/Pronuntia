@@ -6,6 +6,7 @@ use app\models\EsercizioModel;
 use app\models\FacadeAccount;
 use app\models\FacadeEsercizio;
 use app\models\ImmagineEsercizioModel;
+use yii\data\SqlDataProvider;
 use app\models\SerieModel;
 use app\models\UtenteModel;
 use yii\helpers\ArrayHelper;
@@ -56,7 +57,6 @@ class EsercizioController extends \yii\web\Controller
                     'model' => null,
                 ]
             );
-
         } else if ($tipologiaEsercizio == 'abb') {
 
             // istanzia il model e restituisce il nome dell'esercizio
@@ -64,15 +64,15 @@ class EsercizioController extends \yii\web\Controller
 
             if (isset($post['confirm-button'])) {
                 // crea l'esercizio sul database attraverso la facade senza accedere direttamente al model
-               $isSaved = $facadeEsercizio->salvaEsercizio(
-                        $nomeEsercizio, // nome esercizio
-                        $tipologiaEsercizio, // tipologia
-                        "esercizi/$nomeEsercizio", // path esercizio di abbinamento
-                        null, // testo esercizio (null se è esercizio di abbinamento)
-                        Yii::$app->user->getId() // email logopedista
-                    );
+                $isSaved = $facadeEsercizio->salvaEsercizio(
+                    $nomeEsercizio, // nome esercizio
+                    $tipologiaEsercizio, // tipologia
+                    "esercizi/$nomeEsercizio", // path esercizio di abbinamento
+                    null, // testo esercizio (null se è esercizio di abbinamento)
+                    Yii::$app->user->getId() // email logopedista
+                );
 
-               if ($isSaved){
+                if ($isSaved) {
                     return $this->render(
                         'creaesercizioview',
                         [
@@ -82,10 +82,8 @@ class EsercizioController extends \yii\web\Controller
                         ]
                     );
                 } else {
-                    // todo: alert nome esercizio esistente
-                    Yii::error("None esercizio già esistente");
+                    Yii::$app->getSession()->setFlash('danger', 'Nome esercizio già esistente!');
                 }
-
             } else if (isset($post['continue-button'])) {
                 $facadeEsercizio->aggiungiImmagineDaForm();
 
@@ -98,6 +96,36 @@ class EsercizioController extends \yii\web\Controller
                     ]
                 );
             }
+        } else if ($tipologiaEsercizio == 'par') {
+
+            if (!empty($post)) {
+
+                $nomeEsercizio = $facadeEsercizio->getNomeEsercizio($post);
+
+                $isSaved = $facadeEsercizio->salvaEsercizio(
+                    $nomeEsercizio, // nome esercizio
+                    $tipologiaEsercizio, // tipologia
+                    "esercizi/$nomeEsercizio",
+                    $post['ImmagineEsercizioModel']['nomeImmagine'], // testo esercizio (null se è esercizio di abbinamento)
+                    Yii::$app->user->getId() // email logopedista
+                );
+
+                if ($isSaved) {
+                    Yii::$app->getSession()->setFlash('success', 'Inserimento andato a buon fine!');
+                    $facadeEsercizio->aggiungiImmagineDaForm();
+                } else {
+                    Yii::$app->getSession()->setFlash('danger', 'Inserimento fallito!');
+                }
+            }
+
+            return $this->render(
+                'creaesercizioview',
+                [
+                    'tipologiaEsercizio' => $tipologiaEsercizio,
+                    'nomeEsercizio' => null,
+                    'model' => new ImmagineEsercizioModel(),
+                ]
+            );
         }
 
         return $this->render(
@@ -110,16 +138,19 @@ class EsercizioController extends \yii\web\Controller
         );
     }
 
-    public function actionVisualizzaeserciziview($nomeSerie = 'def'){
+    public function actionVisualizzaeserciziview($nomeSerie = 'def')
+    {
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $facade = new FacadeEsercizio();
         $postField = 'selection';
         Yii::error(Yii::$app->request->post());
 
-        if (Yii::$app->request->post('ricercaEsercizi') !== null){
+        if (Yii::$app->request->post('ricercaEsercizi') !== null) {
             $post = Yii::$app->request->post();
             $nomeEsercizio = $post['EsercizioModel']['nome'];
-            return $this->render('visualizzaeserciziview', [
+            return $this->render(
+                'visualizzaeserciziview',
+                [
                     'dataProvider' => $facade->getEsercizioByNome($nomeEsercizio),
                 ]
             );
@@ -128,42 +159,62 @@ class EsercizioController extends \yii\web\Controller
         if ($nomeSerie != 'def' && !empty(Yii::$app->request->post($postField))) {
             Yii::error(Yii::$app->request->post($postField));
 
-            if ($facade->aggiungiEserciziToSerie(Yii::$app->request->post($postField), $nomeSerie)){
-                // todo: inserisci alert
+            if ($facade->aggiungiEserciziToSerie(Yii::$app->request->post($postField), $nomeSerie)) {
+                Yii::$app->getSession()->setFlash('success', 'Inserimento andato a buon fine!');
             }
-
         }
 
-        return $this->render('visualizzaeserciziview', [
+        return $this->render(
+            'visualizzaeserciziview',
+            [
                 'dataProvider' => $facade->getAllEsercizi(),
             ]
         );
     }
 
-    public function actionCreaserieview(){
+    public function actionCreaserieview()
+    {
+
+        /*$var = scandir('esercizi/Ciao');
+        Yii::error($var);
+
+        Yii::error(substr($var[2], 0, -4));*/
+
+
+
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $post = Yii::$app->request->post();
         $facade = new FacadeEsercizio();
-        if ($facade->salvaSerieEsercizi($post)){
-            return $this->redirect('visualizzaeserciziview?nomeSerie='.$post['SerieModel']['nomeSerie']);
+        if ($facade->salvaSerieEsercizi($post)) {
+            return $this->redirect('visualizzaeserciziview?nomeSerie=' . $post['SerieModel']['nomeSerie']);
         } else {
-            Yii::error("Serie non create");
+            Yii::$app->getSession()->setFlash('danger', 'Nome serie già presente!');
         }
         return $this->render('creaserieview', ['model' => new SerieModel()]);
     }
 
-    public function actionAssegnaserieview(){
+    /**
+     * @throws NotFoundHttpException
+     */
+    public function actionAssegnaserieview()
+    {
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $post = Yii::$app->request->post();
         $facade = new FacadeEsercizio();
-
-        if (Yii::$app->request->post('assegnaSerie') !== null){
+        if (Yii::$app->request->post('assegnaSerie') !== null) {
             Yii::error($post['UtenteModel']['username']);
             Yii::error($post['SerieModel']['nomeSerie']);
             Yii::error(date('Y-m-d'));
-            Yii::error($facade->assegnaSerieEserciziToUtente($post['UtenteModel']['username'], $post['SerieModel']['nomeSerie']));
+            $nomeSerie = $post['SerieModel']['nomeSerie'];
+            $username = $post['UtenteModel']['username'];
+            if ($facade->assegnaSerieEserciziToUtente($username, $nomeSerie)) {
+                Yii::$app->getSession()
+                    ->setFlash('success', 'La serie ' . $nomeSerie . ' è stata assegnata a: ' . $username);
+            } else {
+                Yii::$app->getSession()
+                    ->setFlash('danger', 'Impossibile assegnare la serie in quanto già precedentemente assegnata');
+            }
         }
-
         return $this->render('assegnaserieview', [
             'modelUtente' => new UtenteModel(),
             'modelSerie' => new SerieModel(),
@@ -173,4 +224,20 @@ class EsercizioController extends \yii\web\Controller
     }
 
 
+
+    public function actionListaserieassegnateview()
+    {
+        $this->layout = 'dashutn';
+
+        $string = substr($_COOKIE['utente'], 0, -10);
+
+        $dataProvider = new SqlDataProvider([
+            'sql' => "SELECT * FROM serie WHERE utente= '" . $string . "'",
+        ]);
+
+
+        return $this->render('listaserieassegnateview', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 }

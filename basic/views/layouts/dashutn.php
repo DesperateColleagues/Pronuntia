@@ -43,7 +43,7 @@ AppAsset::register($this);
 
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
-            'items' => [['label' => 'Svolgi esercizi', 'url' => ['/site/about']],
+            'items' => [['label' => 'Svolgi esercizi', 'url' => ['/esercizio/listaserieassegnateview']],
                 ['label' => 'Logout', 'url' => ['/site/logout']]
             ],
         ]);

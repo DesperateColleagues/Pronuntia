@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
     if ($tipologiaEsercizio == 'abb') {
 
         if ($nomeEsercizio == null) {
-            echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio');
+            echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio di abbinamento');
             echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'confirm-button']);
         } else {
             echo '<p>';
@@ -56,15 +56,33 @@ $this->params['breadcrumbs'][] = $this->title;
         echo $hiddenFieldTipologia;
 
         echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
+    } else if ($tipologiaEsercizio == 'par') {
+
+        $esModel = new EsercizioModel();
+        echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio di lettura di una parola');
+        echo $form->field($model, 'nomeImmagine')->textInput()->label('Parola da far leggere');
+        echo $form->field($model, 'file')->fileInput()->label('Immagine da associare alla parola');
+
+        $hiddenFieldLogopedista = $form->field($esModel, 'logopedista')
+            ->hiddenInput(['value' => Yii::$app->user->getId()])->label(false);
+
+        echo $hiddenFieldLogopedista;
+
+        $hiddenFieldTipologia = $form->field($esModel, 'tipologia')
+            ->hiddenInput(['value' => 'par'])->label(false);
+
+        echo $hiddenFieldTipologia;
+
+        echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
     }
     ?>
 
     <?php ActiveForm::end(); ?>
 
 
-<?php
+    <?php
     echo '<br>';
     echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
-?>
+    ?>
 
 </div>

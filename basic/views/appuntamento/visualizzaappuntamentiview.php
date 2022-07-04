@@ -28,7 +28,7 @@ if ($tipoAttore == \app\models\TipoAttore::CAREGIVER)
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php  try {
+    <?php try {
         echo GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,

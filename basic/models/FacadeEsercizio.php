@@ -7,6 +7,8 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 
+use Yii;
+
 class FacadeEsercizio
 {
     private $iem;
@@ -17,8 +19,9 @@ class FacadeEsercizio
      * @param array $imgModelPar array post
      *
      * @return string nome dell'esercizio
-    */
-    public function getNomeEsercizio($imgModelPar){
+     */
+    public function getNomeEsercizio($imgModelPar)
+    {
         $this->iem = new ImmagineEsercizioModel();
         $this->iem->load($imgModelPar);
 
@@ -28,10 +31,11 @@ class FacadeEsercizio
     /**
      * Aggiunge un immagine per l'esercizio di abbinamento
      *
-    */
-    public function aggiungiImmagineDaForm(){
+     */
+    public function aggiungiImmagineDaForm()
+    {
         $file = UploadedFile::getInstance($this->iem, 'file');
-        $file->saveAs('esercizi/'.$this->iem->nomeEsercizio.'/'. $this->iem->nomeImmagine. '.jpg');
+        $file->saveAs('esercizi/' . $this->iem->nomeEsercizio . '/' . $this->iem->nomeImmagine . '.jpg');
     }
 
     /**
@@ -44,8 +48,9 @@ class FacadeEsercizio
      * @param string $logopedista email del logopedista
      *
      * @return bool indica se la creazione ha avuto successo o meno
-    */
-    public function salvaEsercizio($nome, $tipologiaEsercizio, $path, $testo, $logopedista){
+     */
+    public function salvaEsercizio($nome, $tipologiaEsercizio, $path, $testo, $logopedista)
+    {
 
         // salva il record solo se la directory viene creata
         if ($this->creaDirectory($nome)) {
@@ -68,7 +73,8 @@ class FacadeEsercizio
      *
      * @return ActiveDataProvider
      */
-    public function getAllEsercizi(){
+    public function getAllEsercizi()
+    {
         return new ActiveDataProvider([
             'query' => EsercizioModel::find()
         ]);
@@ -80,10 +86,12 @@ class FacadeEsercizio
      * @param string $nome nome dell'esercizio
      *
      * @return ActiveDataProvider
-    */
-    public function getEsercizioByNome($nome){
-        return new ActiveDataProvider([
-            'query' => EsercizioModel::find()->where(['nome' => $nome]),
+     */
+    public function getEsercizioByNome($nome)
+    {
+        return new ActiveDataProvider(
+            [
+                'query' => EsercizioModel::find()->where(['nome' => $nome]),
             ]
         );
     }
@@ -92,8 +100,9 @@ class FacadeEsercizio
      * Restituisce tutte le serie inserite nel db come array
      *
      * @return array le serie inserite
-    */
-    public function getAllSerie(){
+     */
+    public function getAllSerie()
+    {
         return ArrayHelper::toArray(SerieModel::find()
             ->where(['logopedista' => \Yii::$app->user->id])
             ->all());
@@ -104,7 +113,8 @@ class FacadeEsercizio
      *
      * @return array utenti inseriti
      */
-    public function getAllUtenti(){
+    public function getAllUtenti()
+    {
         return ArrayHelper::toArray(UtenteModel::find()
             ->where(['logopedista' => \Yii::$app->user->id])
             ->all());
@@ -115,8 +125,9 @@ class FacadeEsercizio
      *
      * @param array $serieParams
      * @return bool
-    */
-    public function salvaSerieEsercizi($serieParams){
+     */
+    public function salvaSerieEsercizi($serieParams)
+    {
         $model = new SerieModel();
         $model->load($serieParams);
         return $model->save();
@@ -125,11 +136,15 @@ class FacadeEsercizio
     /**
      * @throws NotFoundHttpException
      */
-    public function assegnaSerieEserciziToUtente($utente, $nomeSerie){
+    public function assegnaSerieEserciziToUtente($utente, $nomeSerie)
+    {
         $model = $this->findModelSerie($nomeSerie);
-        $model->utente = $utente;
-        $model->dataAssegnazione = date('Y-m-d');
-        return $model->save();
+        if ($model->utente == null) {
+            $model->utente = $utente;
+            $model->dataAssegnazione = date('Y-m-d');
+            return $model->save();
+        }
+        return false;
     }
 
     /**
@@ -139,16 +154,17 @@ class FacadeEsercizio
      * @param string $nomeSerie nome della serie
      *
      * @return bool risultato dell'inserimento
-    */
-    public function aggiungiEserciziToSerie($esercizi, $nomeSerie){
+     */
+    public function aggiungiEserciziToSerie($esercizi, $nomeSerie)
+    {
         $ret = true;
 
-        for ($i = 0; $i < sizeof($esercizi); $i++){
+        for ($i = 0; $i < sizeof($esercizi); $i++) {
             $model = new ComposizioneserieModel();
             $model->esercizio = $esercizi[$i];
             $model->serie = $nomeSerie;
 
-            \Yii::error( $model->serie);
+            \Yii::error($model->serie);
             \Yii::error($model->esercizio);
 
             $ret = $model->save();
@@ -166,8 +182,9 @@ class FacadeEsercizio
      * @param string $nomeDir nome della directory
      *
      * @return bool indica se la directory è stata creata o meno
-    */
-    private function creaDirectory($nomeDir){
+     */
+    private function creaDirectory($nomeDir)
+    {
         $path = realpath("esercizi/$nomeDir");
         $ret = false;
 
@@ -190,5 +207,4 @@ class FacadeEsercizio
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
 }
