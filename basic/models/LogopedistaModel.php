@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "logopedista".
@@ -12,8 +15,9 @@ use Yii;
  * @property string $dataNascita
  * @property string $email
  * @property string $passwordD
+ * @property string $authKey
  */
-class LogopedistaModel extends \yii\db\ActiveRecord
+class LogopedistaModel extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -33,6 +37,8 @@ class LogopedistaModel extends \yii\db\ActiveRecord
             [['dataNascita'], 'safe'],
             [['nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD'], 'string', 'max' => 255],
+            [['authKey'], 'string', 'max' => 50],
+            [['email'], 'email'],
             [['email'], 'unique'],
         ];
     }
@@ -45,10 +51,46 @@ class LogopedistaModel extends \yii\db\ActiveRecord
         return [
             'nome' => 'Nome',
             'cognome' => 'Cognome',
-            'dataNascita' => 'Data Nascita',
+            'dataNascita' => 'Data di nascita',
             'email' => 'Email',
             'passwordD' => 'Password',
         ];
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException();
+    }
+
+    public function getId()
+    {
+        return $this->email;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->authKey == $authKey;
+    }
+
+    public static function findByEmail($email){
+        return self::findOne(['email' => $email]);
+    }
+
+    public function validatePassword($password){
+        return $this->passwordD == md5($password);
     }
 }
 

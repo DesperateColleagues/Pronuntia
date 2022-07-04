@@ -2,17 +2,22 @@
 
 namespace app\controllers;
 
+use app\models\ContactForm;
+use app\models\FacadeAccount;
+use app\models\LoginForm;
+use app\models\TipoAttore;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
-use app\models\EntryForm;
+
 
 class SiteController extends Controller
 {
+    public $layout = 'main';
+
     /**
      * {@inheritdoc}
      */
@@ -55,14 +60,6 @@ class SiteController extends Controller
         ];
     }
 
-    /*public function actionRegistrazione(){
-        $model = new FormRegistrazione();
-
-        return $this->render('registrazione', [
-            'model' => $model
-        ]);
-    }*/
-
     /**
      * Displays homepage.
      *
@@ -76,25 +73,44 @@ class SiteController extends Controller
     /**
      * Login action.
      *
-     * @return Response|string
+     * @return string
      */
     public function actionLogin()
     {
-        /*if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }*/
+        $post = Yii::$app->request->post();
+        $account = new FacadeAccount();
 
-        $model = new LoginForm();
+        /** res assume due tipologie di valori:
+         *  1) false: se il login non va a buon fine
+         *  2) il valore del tipo di utente che sta effettuando l'accesso: se il login va a buon fine
+         */
+        $res = $account->accesso($post);
 
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->render('@app/views/logopedista/dashboardlogopedista', [
-                'message' => $model->email
-            ]);
+        Yii::error($res);
+
+        if ($res == TipoAttore::LOGOPEDISTA) {
+            $this->redirect('/logopedista/dashboardlogopedista?tipoAttore=' . $res);
+            //return $this->render('@app/views/logopedista/dashboardlogopedista');
+        } else if ($res == TipoAttore::CAREGIVER) {
+            //$this->layout = 'dashcar';
+            $cookie_name = "caregiver";
+            $cookie_value = Yii::$app->user->getId();
+            VarDumper::dump( $cookie_value);
+            setcookie($cookie_name, $cookie_value, 0, "/");
+            $this->redirect('/caregiver/dashboardcaregiver?tipoAttore=' . $res);
+        } else if ($res == TipoAttore::UTENTE) {
+            $cookie_name = "utente";
+            $cookie_value = Yii::$app->user->getId();
+            VarDumper::dump( $cookie_value);
+            setcookie($cookie_name, $cookie_value, 0, "/");
+            $this->redirect('/utente/dashboardutente?tipoAttore=' . $res);
+            /*return $this->render('@app/views/utente/dashboardutente');*/
+        } else if ($res ==  'n') {
+            Yii::error('Errore nel login');
         }
 
-        //$model->password = '';
         return $this->render('login', [
-            'model' => $model,
+            'model' => $account->getLoginForm(),
         ]);
     }
 
@@ -105,8 +121,8 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
-
+        if (!Yii::$app->user->isGuest)
+            Yii::$app->user->logout(true);
         return $this->goHome();
     }
 
@@ -138,19 +154,19 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionEntry()
+    public function actionDownload()
     {
-        $model = new EntryForm();
+        clearstatcache();
+        $file = Yii::$app->request->get('file');
+        $path = Yii::$app->request->get('path');
+        $root = Yii::getAlias('@webroot') . $path . $file;
+        
+        Yii::error($root.' '.file_exists($root));
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // valid data received in $model
-
-            // do something meaningful here about $model ...
-
-            return $this->render('entry-confirm');
+        if (file_exists($root)) {
+            return Yii::$app->response->sendFile($root);
         } else {
-            // either the page is initially displayed or there is some validation error
-            return $this->render('entry');
+            throw new \yii\web\NotFoundHttpException("{$file} is not found!");
         }
     }
 }

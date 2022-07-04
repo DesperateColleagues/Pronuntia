@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "utente".
@@ -19,7 +22,7 @@ use Yii;
  * @property CaregiverModel $caregiverModel
  * @property LogopedistaModel $logopedistaModel
  */
-class UtenteModel extends \yii\db\ActiveRecord
+class UtenteModel extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -39,6 +42,7 @@ class UtenteModel extends \yii\db\ActiveRecord
             [['dataNascita'], 'safe'],
             [['username', 'nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD', 'logopedista', 'caregiver'], 'string', 'max' => 255],
+            [['email'], 'email'],
             [['username'], 'unique'],
             [['logopedista'], 'exist', 'skipOnError' => true, 'targetClass' => LogopedistaModel::className(), 'targetAttribute' => ['logopedista' => 'email']],
             [['caregiver'], 'exist', 'skipOnError' => true, 'targetClass' => CaregiverModel::className(), 'targetAttribute' => ['caregiver' => 'email']],
@@ -67,7 +71,7 @@ class UtenteModel extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getCaregiver0()
+    public function getCaregiverModel()
     {
         return $this->hasOne(CaregiverModel::className(), ['email' => 'caregiver']);
     }
@@ -77,8 +81,46 @@ class UtenteModel extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getLogopedista0()
+    public function getLogopedistaModel()
     {
         return $this->hasOne(LogopedistaModel::className(), ['email' => 'logopedista']);
     }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException();
+    }
+
+    public function getId()
+    {
+        return $this->email;
+    }
+
+    public function getAuthKey()
+    {
+        return null;//$this->authKey;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        throw new NotSupportedException();
+        //return $this->authKey == $authKey;
+    }
+
+    public static function findByUsername($username){
+        return self::findOne(['username' => $username]);
+    }
+
+    public function validatePassword($password){
+        return $this->passwordD == md5($password);
+    }
+
 }

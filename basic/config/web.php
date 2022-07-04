@@ -1,5 +1,6 @@
 <?php
 
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -21,7 +22,8 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\LogopedistaModel',
+            'enableSession' => true,
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -43,7 +45,7 @@ $config = [
                 ],
             ],
         ],
-        
+
         'db' => $db,
         
         'urlManager' => [

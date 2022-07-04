@@ -3,7 +3,10 @@
 namespace app\models;
 
 use Yii;
-use Yii\db\ActiveRecord;
+use yii\base\NotSupportedException;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
+
 /**
  * This is the model class for table "caregiver".
  *
@@ -15,7 +18,7 @@ use Yii\db\ActiveRecord;
  *
  * @property UtenteModel[] $utenti
  */
-class CaregiverModel extends ActiveRecord
+class CaregiverModel extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -36,6 +39,7 @@ class CaregiverModel extends ActiveRecord
             [['nome', 'cognome'], 'string', 'max' => 60],
             [['email', 'passwordD'], 'string', 'max' => 255],
             [['email'], 'unique'],
+            [['email'], 'email'],
         ];
     }
 
@@ -61,5 +65,46 @@ class CaregiverModel extends ActiveRecord
     public function getUtenti()
     {
         return $this->hasMany(UtenteModel::className(), ['caregiver' => 'email']);
+    }
+
+    public static function findIdentity($id)
+    {
+        return self::findOne($id);
+    }
+
+    /**
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        throw new NotSupportedException();
+    }
+
+    public function getId()
+    {
+        return $this->email;
+    }
+
+    public function getAuthKey()
+    {
+        return null;//$this->authKey;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        throw new NotSupportedException();
+        //return $this->authKey == $authKey;
+    }
+
+    public static function findByEmail($email){
+        return self::findOne(['email' => $email]);
+    }
+
+    public function validatePassword($password){
+        return $this->passwordD == md5($password);
+    }
+
+    public function getUserByEmail($email){
+        return UtenteModel::findOne(['caregiver' => $email])->username;
     }
 }
