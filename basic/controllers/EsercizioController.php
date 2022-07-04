@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ComposizioneserieModel;
 use app\models\EsercizioModel;
 use app\models\FacadeAccount;
 use app\models\FacadeEsercizio;
@@ -180,8 +181,6 @@ class EsercizioController extends \yii\web\Controller
 
         Yii::error(substr($var[2], 0, -4));*/
 
-
-
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $post = Yii::$app->request->post();
         $facade = new FacadeEsercizio();
@@ -229,15 +228,46 @@ class EsercizioController extends \yii\web\Controller
     {
         $this->layout = 'dashutn';
 
-        $string = substr($_COOKIE['utente'], 0, -10);
+        $facade = new FacadeEsercizio();
 
-        $dataProvider = new SqlDataProvider([
-            'sql' => "SELECT * FROM serie WHERE utente= '" . $string . "'",
-        ]);
+        $string = substr($_COOKIE['utente'], 0, -10);
 
 
         return $this->render('listaserieassegnateview', [
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $facade->getSerieByUtente(substr($_COOKIE['utente'], 0, -10)),
+        ]);
+    }
+
+    public function actionSvolgimentoserieview($nomeSerie, $index = 0)
+    {
+
+        $this->layout = 'dashutn';
+
+        $facade = new FacadeEsercizio();
+
+        $esercizi = $facade->getAllEserciziBySerie($nomeSerie);
+
+        Yii::error($esercizi[$index]['esercizio']);
+
+        $pathEsercizio = 'esercizi/'.$esercizi[$index]['esercizio'];
+
+        $directory = scandir($pathEsercizio);
+
+        $offset = 2;
+
+        $pathnames = [];
+        $soluzioni = [];
+
+        for ($i = $offset; $i < sizeof($directory); $i++) {
+            $pathnames[$i-$offset] = '@web/'.$pathEsercizio.'/'.$directory[$i];
+            $soluzioni[$i-$offset] = (substr($directory[$i], 0, -4));
+        }
+
+        return $this->render('svolgimentoserieview',[
+            'model' => new ComposizioneserieModel(),
+            'tipologia' => $facade->getTipologiaEsercizio($esercizi[$index]['esercizio']),
+            'soluzioni' => $soluzioni,
+            'pathnames' => $pathnames
         ]);
     }
 }

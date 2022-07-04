@@ -97,6 +97,49 @@ class FacadeEsercizio
     }
 
     /**
+     * Restituisce le tuple delle serie corrispondenti allo username passato in input
+     *
+     * @param string $username username dell'utente
+     *
+     * @return ActiveDataProvider
+     */
+    public function getSerieByUtente($username)
+    {
+        return new ActiveDataProvider(
+            [
+                'query' => SerieModel::find()->where(['utente' => $username]),
+            ]
+        );
+    }
+
+    /**
+     * Restituisce la tipologia dell'esercizio passato in input attraverso il suo nome
+     *
+     * @param string $nomeEsercizio nome esercizio di cui cercare la tipologia
+     *
+     * @return ActiveDataProvider
+     */
+    public function getTipologiaEsercizio($nomeEsercizio) {
+        return ArrayHelper::toArray(EsercizioModel::find()
+            ->select('tipologia')
+            ->where(['nome' => $nomeEsercizio])
+            ->all());
+    }
+
+    /**
+     * Restituisce tutti gli esercizi della serie passata in input tramite il nome
+     *
+     * @return array gli esercizi interni alla serie
+     */
+    public function getAllEserciziBySerie($nomeSerie)
+    {
+        return ArrayHelper::toArray(ComposizioneserieModel::find()
+            ->select('esercizio')
+            ->where(['serie' => $nomeSerie])
+            ->all());
+    }
+
+    /**
      * Restituisce tutte le serie inserite nel db come array
      *
      * @return array le serie inserite
@@ -207,4 +250,6 @@ class FacadeEsercizio
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
 }
