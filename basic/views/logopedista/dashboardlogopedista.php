@@ -4,6 +4,7 @@
 /** @var yii\bootstrap4\ActiveForm $form */
 
 use yii\bootstrap4\ActiveForm;
+use yii\bootstrap4\ButtonDropdown;
 use yii\bootstrap4\Html;
 ?>
 
@@ -11,12 +12,33 @@ use yii\bootstrap4\Html;
 
 <div class="form-group">
     <?php
-        echo "<br>Benvenuto: ".Yii::$app->user->getId();
+        echo "<br>Benvenuto nella tua dashboard, ".Yii::$app->user->getId().". Scegli una delle seguenti opzioni per gestire i tuoi assistiti.";
         echo '<br><br><h3>Opzioni</h3>';
-        echo Html::a('Esercizio abbinamento', ['/esercizio/creaesercizioview?tipologiaEsercizio=abb'], ['class' => 'btn btn-primary mr-2']);
-        echo Html::a('Esercizio lettura', ['/esercizio/creaesercizioview?tipologiaEsercizio=let'], ['class' => 'btn btn-primary mr-2']);
-        echo Html::a('Crea Serie', ['/esercizio/creaserieview'], ['class' => 'btn btn-primary mr-2']);
-        echo Html::a('Assegna Serie', ['/esercizio/assegnaserieview'], ['class' => 'btn btn-primary mr-2']);
+
+        echo ButtonDropdown::widget([
+            'label' => 'Inserimento nuovo esercizio',
+            'dropdown' => [
+                'items' => [
+                    ['label' => 'Esercizio di abbinamento parole', 'url' => '/esercizio/creaesercizioview?tipologiaEsercizio=abb'],
+                    ['label' => 'Esercizio di ripetizione parola', 'url' => '/esercizio/creaesercizioview?tipologiaEsercizio=par'],
+                ],
+            ],
+        ]);
+
+        echo ButtonDropdown::widget([
+            'label' => 'Gestione serie esercizi',
+            'dropdown' => [
+                'items' => [
+                    ['label' => 'Creazione nuova serie', 'url' => '/esercizio/creaserieview'],
+                    ['label' => 'Assegnazione serie ad utente', 'url' => '/esercizio/assegnaserieview'],
+                ],
+            ],
+        ]);
+
+        //echo Html::a('Esercizio abbinamento', ['/esercizio/creaesercizioview?tipologiaEsercizio=abb'], ['class' => 'btn btn-primary mr-2']);
+        //echo Html::a('Esercizio lettura parole', ['/esercizio/creaesercizioview?tipologiaEsercizio=par'], ['class' => 'btn btn-primary mr-2']);
+        //echo Html::a('Crea Serie', ['/esercizio/creaserieview'], ['class' => 'btn btn-primary mr-2']);
+        //echo Html::a('Assegna Serie', ['/esercizio/assegnaserieview'], ['class' => 'btn btn-primary mr-2']);
     ?>
 
 </div>

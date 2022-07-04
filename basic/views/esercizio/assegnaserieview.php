@@ -1,4 +1,5 @@
 <?php
+
 /** @var array $utenti */
 /** @var array $serie */
 /** @var UtenteModel $modelUtente */
@@ -15,15 +16,23 @@ use yii\helpers\Html;
 <?php
 $form = \yii\widgets\ActiveForm::begin();
 
-$utenti = ArrayHelper::map($utenti,'username',function($par){
-    return $par['nome'].' '.$par['cognome'].' - '.$par['username'];
+$utenti = ArrayHelper::map($utenti, 'username', function ($par) {
+    return $par['nome'] . ' ' . $par['cognome'] . ' - ' . $par['username'];
 });
 
 echo $form->field($modelUtente, 'username')->dropDownList(
     $utenti
 );
 
-$serie = ArrayHelper::map($serie,'nomeSerie','nomeSerie');
+$serie = ArrayHelper::map($serie, 'nomeSerie', function ($par) {
+    $message = $par['nomeSerie'];
+    if ($par['utente'] != null) {
+        $message = $message . ' - assegnata a: ' . $par['utente'];
+    } else {
+        $message = $message . ' - non assegnata';
+    }
+    return $message;
+});
 
 
 echo $form->field($modelSerie, 'nomeSerie')->dropDownList(
@@ -31,6 +40,7 @@ echo $form->field($modelSerie, 'nomeSerie')->dropDownList(
 );
 
 echo Html::submitButton('Assegna', ['class' => 'btn btn-primary mr-1',  'name' => 'assegnaSerie']);
+echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
 
 $form::end();
 ?>
