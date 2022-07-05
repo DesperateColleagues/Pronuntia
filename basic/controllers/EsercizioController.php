@@ -11,6 +11,7 @@ use yii\data\SqlDataProvider;
 use app\models\SerieModel;
 use app\models\UtenteModel;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
 use Yii;
@@ -180,7 +181,7 @@ class EsercizioController extends \yii\web\Controller
         $facade = new FacadeEsercizio();
         if ($facade->salvaSerieEsercizi($post)) {
             return $this->redirect('visualizzaeserciziview?nomeSerie=' . $post['SerieModel']['nomeSerie']);
-        } else {
+        } else if (!empty($post)) {
             Yii::$app->getSession()->setFlash('danger', 'Nome serie già presente!');
         }
         return $this->render('creaserieview', ['model' => new SerieModel()]);
@@ -229,39 +230,76 @@ class EsercizioController extends \yii\web\Controller
 
     public function actionSvolgimentoserieview($nomeSerie, $index = 0)
     {
-
         $this->layout = 'dashutn';
 
         $facade = new FacadeEsercizio();
-
         $esercizi = $facade->getAllEserciziBySerie($nomeSerie);
-
-        Yii::error($esercizi[$index]['esercizio']);
-
-        $pathEsercizio = 'esercizi/'.$esercizi[$index]['esercizio'];
+        $tipoEs = $facade->getTipologiaEsercizio($esercizi[$index]['esercizio']);
+        $nomeEsercizio = $esercizi[$index]['esercizio'];
+        $pathEsercizio = 'esercizi/' . $nomeEsercizio;
 
         $directory = scandir($pathEsercizio);
-
         $offset = 2;
 
         $pathnames = [];
         $soluzioni = [];
 
         for ($i = $offset; $i < sizeof($directory); $i++) {
-            $pathnames[$i-$offset] = '@web/'.$pathEsercizio.'/'.$directory[$i];
-            $soluzioni[$i-$offset] = (substr($directory[$i], 0, -4));
+            $pathnames[$i - $offset] = '@web/' . $pathEsercizio . '/' . $directory[$i];
+            $soluzioni[$i - $offset] = (substr($directory[$i], 0, -4));
         }
 
-        shuffle($soluzioni);
-        Yii::error($soluzioni);
+        $shuffleSoluzioni = [];
 
-        $risposte = Yii::$app->request->post('sort_list_1');
-        Yii::error(preg_split('{,}', $risposte));
-        return $this->render('svolgimentoserieview',[
-            'model' => new ComposizioneserieModel(),
-            'tipologia' => $facade->getTipologiaEsercizio($esercizi[$index]['esercizio']),
-            'soluzioni' => $soluzioni,
+        $shuffleSoluzioni = array_merge(array(), $soluzioni); // clonazione array soluzioni
+        shuffle($shuffleSoluzioni);
+
+        if ($tipoEs == 'abb') {
+            $risposte = preg_split('{,}', Yii::$app->request->post('sort_list_1'));
+            $esResult = $this->checkSoluzioni($soluzioni, $risposte);
+
+            if (!empty(Yii::$app->request->post())) {
+                if (!$esResult) {
+                    Yii::$app->getSession()
+                        ->setFlash('danger', 'Risposta sbagliata! Bambino sei una testa di cazzo');
+
+                    $facade->incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie);
+                } else {
+                    if ($index < sizeof($esercizi) - 1) {
+                        $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
+                    } else {
+                        $url = Url::toRoute(['utente/dashboardutente']);
+                    }
+
+                    $this->redirect($url);
+                }
+            }
+        } else if ($tipoEs == 'par'){
+            if (Yii::$app->request->post('confermaRispostaLettura') !== null){
+
+                if ($index < sizeof($esercizi) - 1) {
+                    $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
+                } else {
+                    $url = Url::toRoute(['utente/dashboardutente']);
+                }
+
+                $this->redirect($url);
+            }
+        }
+
+        return $this->render('svolgimentoserieview', [
+            'tipologiaEsercizio' => $tipoEs,
+            'soluzioni' => $shuffleSoluzioni,
             'pathnames' => $pathnames
         ]);
+    }
+
+    private function checkSoluzioni($soluzioni, $risposte){
+        for ($i = 0; $i < sizeof($soluzioni); $i++){
+            if ($soluzioni[$i] != $risposte[$i])
+                return false;
+        }
+
+        return true;
     }
 }

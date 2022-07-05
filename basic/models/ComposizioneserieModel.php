@@ -9,6 +9,7 @@ use Yii;
  *
  * @property string $serie
  * @property string $esercizio
+ * @property int $tentativi [smallint]
  *
  */
 class ComposizioneserieModel extends \yii\db\ActiveRecord
