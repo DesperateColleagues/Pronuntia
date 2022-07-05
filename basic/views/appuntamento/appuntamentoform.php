@@ -1,6 +1,7 @@
 <?php
 
 use app\models\DiagnosiModel;
+use kartik\date\DatePicker;
 use yii\helpers\Html;
 use yii\helpers\VarDumper;
 use yii\widgets\ActiveForm;
@@ -17,9 +18,28 @@ use yii\data\SqlDataProvider;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'dataAppuntamento')->textInput() ?>
+    <?= $form->field($model, 'dataAppuntamento')->widget(DatePicker::className(), [
+                    'name' => 'dataAppuntamento',
+                    'type' => DatePicker::TYPE_INPUT,
+                    'value' => '',
+                    'bsVersion' => '4',
+                    'language' => 'it',
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd'
+                    ]
+                ])->label('Data appuntamento') ?>
 
-    <?= $form->field($model, 'oraAppuntamento')->textInput() ?>
+    <?= $form->field($model, 'oraAppuntamento')->widget(\kartik\time\TimePicker::className(), [
+            'name' => 'oraAppuntamento',
+            'bsVersion' => '4',
+            'language' => 'it',
+            'pluginOptions' => [
+                    'showSeconds' => false,
+                    'showMeridian' => false,
+                    'minuteStep' => 5
+            ]
+    ])->label('Ora appuntamento') ?>
 
     <?php if (isset($diaModel) && $model->utente != null) {
         // Permette il caricamento della diagnosi solo ed esclusivamente

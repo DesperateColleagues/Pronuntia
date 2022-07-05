@@ -15,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('appuntamentoform', [
         'model' => $model,
+        'diaModel' => null
     ]) ?>
 
 </div>
