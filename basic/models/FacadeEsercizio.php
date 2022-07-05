@@ -117,13 +117,15 @@ class FacadeEsercizio
      *
      * @param string $nomeEsercizio nome esercizio di cui cercare la tipologia
      *
-     * @return ActiveDataProvider
+     * @return string
      */
     public function getTipologiaEsercizio($nomeEsercizio) {
-        return ArrayHelper::toArray(EsercizioModel::find()
+        $tipoArray = ArrayHelper::toArray(EsercizioModel::find()
             ->select('tipologia')
             ->where(['nome' => $nomeEsercizio])
             ->all());
+
+        return $tipoArray[0]['tipologia'];
     }
 
     /**
@@ -237,6 +239,34 @@ class FacadeEsercizio
         }
 
         return $ret;
+    }
+
+
+    /**
+     * Incrementa il numero di tentativi per un determinato esercizio di una serie
+     *
+     * @param string $nomeSerie nome della serie
+     * @param string $nomeEsercizio nome dell'esercizio
+     *
+     * @return int
+     */
+    /*public function getTentativiEsercizio($nomeEsercizio, $nomeSerie){
+        $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
+        return $model->tentativi;
+    }*/
+
+    /**
+     * Incrementa il numero di tentativi per un determinato esercizio di una serie
+     *
+     * @param string $nomeEsercizio nome dell'esercizio
+     * @param string $nomeSerie nome della serie
+     *
+     * @return bool
+    */
+    public function incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie){
+        $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
+        $model->tentativi = $model->tentativi + 1;
+        return $model->save();
     }
 
     /**
