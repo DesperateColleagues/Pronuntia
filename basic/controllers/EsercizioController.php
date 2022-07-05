@@ -175,12 +175,6 @@ class EsercizioController extends \yii\web\Controller
 
     public function actionCreaserieview()
     {
-
-        /*$var = scandir('esercizi/Ciao');
-        Yii::error($var);
-
-        Yii::error(substr($var[2], 0, -4));*/
-
         $this->layout = 'dashlog'; // carica il layout del logopedista
         $post = Yii::$app->request->post();
         $facade = new FacadeEsercizio();
@@ -222,19 +216,14 @@ class EsercizioController extends \yii\web\Controller
         ]);
     }
 
-
-
     public function actionListaserieassegnateview()
     {
         $this->layout = 'dashutn';
 
         $facade = new FacadeEsercizio();
 
-        $string = substr($_COOKIE['utente'], 0, -10);
-
-
         return $this->render('listaserieassegnateview', [
-            'dataProvider' => $facade->getSerieByUtente(substr($_COOKIE['utente'], 0, -10)),
+            'dataProvider' => $facade->getSerieByUtente($_COOKIE['utente']),
         ]);
     }
 
@@ -263,6 +252,11 @@ class EsercizioController extends \yii\web\Controller
             $soluzioni[$i-$offset] = (substr($directory[$i], 0, -4));
         }
 
+        shuffle($soluzioni);
+        Yii::error($soluzioni);
+
+        $risposte = Yii::$app->request->post('sort_list_1');
+        Yii::error(preg_split('{,}', $risposte));
         return $this->render('svolgimentoserieview',[
             'model' => new ComposizioneserieModel(),
             'tipologia' => $facade->getTipologiaEsercizio($esercizi[$index]['esercizio']),
