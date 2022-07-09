@@ -1,5 +1,4 @@
 <?php
-use app\models\EsercizioModelSearch;
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
@@ -47,7 +46,6 @@ echo Html::submitButton('Conferma inserimento', ['class' => 'btn btn-primary mr-
 echo Html::a('Torna a crea serie', ['/esercizio/creaserieview'], ['class' => 'btn btn-outline-secondary mr-2']);
 echo Html::endForm();
 
-// NON MODIFICARE SENNO' NON FUNZIONA UN CAZZO
 $script = "$(function(){
     $('#selezionaEsercizi').click(function (){
         $.post(['selezionati', {
@@ -55,8 +53,6 @@ $script = "$(function(){
             }])
         })
     }";
-// HO DETTO NON RIMUOVERE FIGLIO DI PUTTANA
 $this ->registerJs($script);
-// SE RIMUOVI QUESTO SCRIPT VENGO A CERCARTI
 ?>
 

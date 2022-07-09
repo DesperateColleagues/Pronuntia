@@ -7,8 +7,9 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model ImmagineEsercizioModel */
-/* @var $tipologiaEsercizio */
-/* @var $nomeEsercizio */
+/* @var nPic int */
+/* @var $tipologiaEsercizio string */
+/* @var $nomeEsercizio string */
 
 $this->title = 'Creazione nuovo esercizio';
 $this->params['breadcrumbs'][] = $this->title;
@@ -27,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         if ($nomeEsercizio == null) {
             echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio di abbinamento');
             echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'confirm-button']);
-        } else {
+        } else if ($nPic < 4) {
             echo '<p>';
             echo '<li>Premere il bottone <b>Continua inserimento</b> per inserire le immagini</li>';
             echo '<li>Premere il bottone <b>Torna alla dashboard</b> per terminare</li>';
@@ -35,9 +36,12 @@ $this->params['breadcrumbs'][] = $this->title;
             echo $form->field($model, 'nomeEsercizio')->textInput(['readonly' => true, 'value' => $nomeEsercizio]);
             echo $form->field($model, 'nomeImmagine')->textInput()->label('Nome Immagine - Soluzione esercizio');
             echo $form->field($model, 'file')->fileInput();
+            echo "<p> Stai inserendo l'immagine numero: ".($nPic+1)."</p>";
 
             echo Html::submitButton('Continua inserimento', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
-            //echo Html::submitButton('Termina inserimento', ['class' => 'btn btn-primary',  'name' => 'end-button']);
+        } else {
+            Yii::$app->getSession()->setFlash('success', 'Inserimento completato');
+            Yii::$app->getSession()->setFlash('danger', 'Numero massimo di immagini caricabili raggiunto');
         }
     } else if ($tipologiaEsercizio == 'let') {
 

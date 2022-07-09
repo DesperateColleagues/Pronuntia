@@ -73,4 +73,9 @@ class LogopedistaController extends Controller
         $this->layout = 'dashlog';
         return $this->render('dashboardlogopedista');
     }
+
+    public function actionMonitoraggioterapialogopedistaview() {
+        $this->layout = 'dashlog';
+        return $this->render('monitoraggioterapialogopedistaview');
+    }
 }

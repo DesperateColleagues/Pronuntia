@@ -3,6 +3,7 @@
 /** @var yii\bootstrap4\ActiveForm $form */
 use app\models\AppuntamentoModelSearch;
 use yii\grid\GridView;
+use yii\helpers\Html;
 ?>
 
 <h1> Benvenuto </h1>

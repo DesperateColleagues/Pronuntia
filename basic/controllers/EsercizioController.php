@@ -2,20 +2,13 @@
 
 namespace app\controllers;
 
-use app\models\ComposizioneserieModel;
-use app\models\EsercizioModel;
-use app\models\FacadeAccount;
 use app\models\FacadeEsercizio;
 use app\models\ImmagineEsercizioModel;
-use yii\data\SqlDataProvider;
 use app\models\SerieModel;
 use app\models\UtenteModel;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
-use yii\web\UploadedFile;
 use Yii;
-use yii\helpers\VarDumper;
 
 class EsercizioController extends \yii\web\Controller
 {
@@ -26,7 +19,6 @@ class EsercizioController extends \yii\web\Controller
         $facadeEsercizio = new FacadeEsercizio();
 
         // crea la directory esercizi
-        // todo: spostare nel costruttore di facade
         $path = realpath("esercizi");
 
         if (!$path || !is_dir($path)) {
@@ -57,6 +49,7 @@ class EsercizioController extends \yii\web\Controller
                     'tipologiaEsercizio' => $tipologiaEsercizio,
                     'nomeEsercizio' => null,
                     'model' => null,
+                    'nPic' => NULL
                 ]
             );
         } else if ($tipologiaEsercizio == 'abb') {
@@ -81,6 +74,7 @@ class EsercizioController extends \yii\web\Controller
                             'tipologiaEsercizio' => $tipologiaEsercizio,
                             'nomeEsercizio' => $nomeEsercizio,
                             'model' => new ImmagineEsercizioModel(),
+                            'nPic' => NULL
                         ]
                     );
                 } else {
@@ -89,12 +83,17 @@ class EsercizioController extends \yii\web\Controller
             } else if (isset($post['continue-button'])) {
                 $facadeEsercizio->aggiungiImmagineDaForm();
 
+                Yii::$app->getSession()->setFlash('success', 'Inserimento completato');
+
+                $nPic = sizeof(scandir("esercizi/$nomeEsercizio")) - 2;
+
                 return $this->render(
                     'creaesercizioview',
                     [
                         'tipologiaEsercizio' => $tipologiaEsercizio,
                         'nomeEsercizio' => $nomeEsercizio,
                         'model' => new ImmagineEsercizioModel(),
+                        'nPic' => $nPic
                     ]
                 );
             }
@@ -126,6 +125,7 @@ class EsercizioController extends \yii\web\Controller
                     'tipologiaEsercizio' => $tipologiaEsercizio,
                     'nomeEsercizio' => null,
                     'model' => new ImmagineEsercizioModel(),
+                    'nPic' => NULL
                 ]
             );
         }
@@ -136,6 +136,7 @@ class EsercizioController extends \yii\web\Controller
                 'tipologiaEsercizio' => $tipologiaEsercizio,
                 'nomeEsercizio' => null,
                 'model' => new ImmagineEsercizioModel(),
+                'nPic' => NULL
             ]
         );
     }
