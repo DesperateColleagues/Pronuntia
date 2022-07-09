@@ -56,7 +56,7 @@ if ($tipologiaEsercizio == 'abb') {
         ['class' => 'btn btn-primary mr-2', 'name' => 'confermaRispostaAbbinamento']);
     echo Html::endForm();
 
-} else if ($tipologiaEsercizio == 'par'){
+} else if ($tipologiaEsercizio == 'par') {
 
     echo "<table style = 'margin-left:auto;margin-right:auto'>";
 
