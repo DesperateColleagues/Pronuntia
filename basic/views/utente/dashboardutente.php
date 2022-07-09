@@ -3,15 +3,9 @@
 /** @var yii\web\View $this */
 /** @var yii\bootstrap4\ActiveForm $form */
 
-use yii\bootstrap4\ActiveForm;
-use yii\bootstrap4\Html;
+use app\models\FacadeEsercizio;
+
 ?>
 
-<h1> Benvenuto </h1>
+<?php echo '<h1> Bentornato '. $_COOKIE['utente'] .'</h1>'; ?>
 
-<div class="form-group">
-    <?php
-        echo "<br>Dati dell'utente loggato: ".$_COOKIE['utente'];
-    ?>
-
-</div>

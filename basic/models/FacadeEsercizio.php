@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\web\UploadedFile;
@@ -245,19 +246,6 @@ class FacadeEsercizio
     /**
      * Incrementa il numero di tentativi per un determinato esercizio di una serie
      *
-     * @param string $nomeSerie nome della serie
-     * @param string $nomeEsercizio nome dell'esercizio
-     *
-     * @return int
-     */
-    /*public function getTentativiEsercizio($nomeEsercizio, $nomeSerie){
-        $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
-        return $model->tentativi;
-    }*/
-
-    /**
-     * Incrementa il numero di tentativi per un determinato esercizio di una serie
-     *
      * @param string $nomeEsercizio nome dell'esercizio
      * @param string $nomeSerie nome della serie
      *
@@ -267,6 +255,52 @@ class FacadeEsercizio
         $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
         $model->tentativi = $model->tentativi + 1;
         return $model->save();
+    }
+
+    /**
+     * Restituisce una classifica ordinata
+     *
+     * @return array elementi della classfica
+    */
+    public function generaClassifica() {
+        $username = $_COOKIE['utente'];
+        $MAX_PUNTEGGIO = 5000;
+        $MIN_PUNTEGGIO = 2000;
+
+        $utenti = array('jak', 'sowimdp31', 'antonioFire85', 'xx_darkAngelCraft_xx', 'PippoPunico');
+        shuffle($utenti);
+        $utenti[] = $username;
+
+        $classifica = array_fill_keys($utenti, 0);
+        $punteggi = array();
+
+        // generazione di punteggi casuali per la classifica
+        for ($i = 0; $i < sizeof($utenti) - 1; $i++){
+            $punteggi[$i] = rand($MIN_PUNTEGGIO, $MAX_PUNTEGGIO);
+        }
+
+        sort($punteggi);
+        // generazione del punteggio utente affinchè sia compreso tra i primi 3
+        $punteggioUtente = rand($punteggi[sizeof($punteggi) - 3], $punteggi[sizeof($punteggi) - 1] - 1);
+
+        // serve per non generare un punteggio duplicato
+        while (in_array($punteggioUtente, $punteggi)){
+            $punteggioUtente = rand($punteggi[sizeof($punteggi) - 3], $punteggi[sizeof($punteggi) - 1] - 1);
+        }
+
+        $punteggi[] = $punteggioUtente; // aggiunta del punteggio dell'utente
+
+
+        // popola array della classifica
+        for ($i = 0; $i < sizeof($utenti); $i++){
+            $classifica[$utenti[$i]] = $punteggi[$i];
+        }
+
+        arsort($classifica);
+        Yii::error($classifica);
+
+        return $classifica;
+
     }
 
     /**
@@ -280,6 +314,8 @@ class FacadeEsercizio
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
 
 
 }

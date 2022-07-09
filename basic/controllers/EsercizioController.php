@@ -269,7 +269,7 @@ class EsercizioController extends \yii\web\Controller
                     if ($index < sizeof($esercizi) - 1) {
                         $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
                     } else {
-                        $url = Url::toRoute(['utente/dashboardutente']);
+                        $url = Url::toRoute(['esercizio/classificaview']);
                     }
 
                     $this->redirect($url);
@@ -292,6 +292,13 @@ class EsercizioController extends \yii\web\Controller
             'tipologiaEsercizio' => $tipoEs,
             'soluzioni' => $shuffleSoluzioni,
             'pathnames' => $pathnames
+        ]);
+    }
+
+    public function actionClassificaview(){
+        $facade = new FacadeEsercizio();
+        return $this->render('classificaview', [
+            'entries' => $facade->generaClassifica()
         ]);
     }
 
