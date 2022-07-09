@@ -168,4 +168,9 @@ class SiteController extends Controller
             throw new \yii\web\NotFoundHttpException("{$file} is not found!");
         }
     }
+
+    public function actionTestautovalutazioneview()
+    {
+        return $this->render('testautovalutazioneview');
+    }
 }

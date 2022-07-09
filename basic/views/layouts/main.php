@@ -38,8 +38,8 @@ AppAsset::register($this);
     try {
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav'],
-            'items' => [['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Login', 'url' => ['/site/login']]
+            'items' => [['label' => 'About us', 'url' => ['/site/about']],
+                //['label' => 'Login', 'url' => ['/site/login']]
             ],
         ]);
     } catch(Exception $e) {

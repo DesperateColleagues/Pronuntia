@@ -1,11 +1,7 @@
 <?php
 
-use app\models\AppuntamentoModel;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
 use yii\grid\GridView;
-use yii\helpers\VarDumper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\AppuntamentoModelSearch */
