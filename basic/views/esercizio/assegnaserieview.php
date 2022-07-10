@@ -5,8 +5,6 @@
 /** @var UtenteModel $modelUtente */
 /** @var SerieModel $modelSerie*/
 
-use app\models\SerieModel;
-use app\models\UtenteModel;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 ?>

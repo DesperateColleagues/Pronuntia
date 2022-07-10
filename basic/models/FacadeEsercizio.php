@@ -120,7 +120,8 @@ class FacadeEsercizio
      *
      * @return string
      */
-    public function getTipologiaEsercizio($nomeEsercizio) {
+    public function getTipologiaEsercizio($nomeEsercizio)
+    {
         $tipoArray = ArrayHelper::toArray(EsercizioModel::find()
             ->select('tipologia')
             ->where(['nome' => $nomeEsercizio])
@@ -134,12 +135,22 @@ class FacadeEsercizio
      *
      * @return array gli esercizi interni alla serie
      */
-    public function getAllEserciziBySerie($nomeSerie)
+    public function getAllEserciziBySerie($nomeSerie,$mode)
     {
+        if($mode == 'a'){
         return ArrayHelper::toArray(ComposizioneserieModel::find()
             ->select('esercizio')
             ->where(['serie' => $nomeSerie])
             ->all());
+        } else {
+            return new ActiveDataProvider(
+                [
+                    'query' => ComposizioneserieModel::find()
+                        ->where(['serie' => $nomeSerie]),
+                ]
+            );
+        }
+
     }
 
     /**
@@ -250,10 +261,29 @@ class FacadeEsercizio
      * @param string $nomeSerie nome della serie
      *
      * @return bool
-    */
-    public function incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie){
+     */
+    public function incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie)
+    {
         $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
         $model->tentativi = $model->tentativi + 1;
+        return $model->save();
+    }
+
+    /**
+     * Incrementa il numero di tentativi per un determinato esercizio di una serie
+     *
+     * @param string $nomeEsercizio nome dell'esercizio
+     * @param string $nomeSerie nome della serie
+     *
+     * @return bool
+     */
+    public function setEsitoEsercizio($nomeEsercizio, $nomeSerie, $value)
+    {
+        $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
+        if ($value == true)
+            $model->esito = 1;
+        else
+            $model->esito = 0;
         return $model->save();
     }
 
@@ -261,8 +291,9 @@ class FacadeEsercizio
      * Restituisce una classifica ordinata
      *
      * @return array elementi della classfica
-    */
-    public function generaClassifica() {
+     */
+    public function generaClassifica()
+    {
         $username = $_COOKIE['utente'];
         $MAX_PUNTEGGIO = 5000;
         $MIN_PUNTEGGIO = 2000;
@@ -275,7 +306,7 @@ class FacadeEsercizio
         $punteggi = array();
 
         // generazione di punteggi casuali per la classifica
-        for ($i = 0; $i < sizeof($utenti) - 1; $i++){
+        for ($i = 0; $i < sizeof($utenti) - 1; $i++) {
             $punteggi[$i] = rand($MIN_PUNTEGGIO, $MAX_PUNTEGGIO);
         }
 
@@ -284,7 +315,7 @@ class FacadeEsercizio
         $punteggioUtente = rand($punteggi[sizeof($punteggi) - 3], $punteggi[sizeof($punteggi) - 1] - 1);
 
         // serve per non generare un punteggio duplicato
-        while (in_array($punteggioUtente, $punteggi)){
+        while (in_array($punteggioUtente, $punteggi)) {
             $punteggioUtente = rand($punteggi[sizeof($punteggi) - 3], $punteggi[sizeof($punteggi) - 1] - 1);
         }
 
@@ -292,7 +323,7 @@ class FacadeEsercizio
 
 
         // popola array della classifica
-        for ($i = 0; $i < sizeof($utenti); $i++){
+        for ($i = 0; $i < sizeof($utenti); $i++) {
             $classifica[$utenti[$i]] = $punteggi[$i];
         }
 
@@ -300,7 +331,6 @@ class FacadeEsercizio
         Yii::error($classifica);
 
         return $classifica;
-
     }
 
     /**
@@ -314,8 +344,4 @@ class FacadeEsercizio
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
-
-
-
 }

@@ -69,13 +69,8 @@ class LogopedistaController extends Controller
         ]);
     }
 
-    public function actionDashboardlogopedista ($tipoAttore) {
+    public function actionDashboardlogopedista($tipoAttore) {
         $this->layout = 'dashlog';
         return $this->render('dashboardlogopedista');
-    }
-
-    public function actionMonitoraggioterapialogopedistaview() {
-        $this->layout = 'dashlog';
-        return $this->render('monitoraggioterapialogopedistaview');
     }
 }

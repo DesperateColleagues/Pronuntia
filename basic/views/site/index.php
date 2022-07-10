@@ -2,7 +2,7 @@
 
 /** @var yii\web\View $this */
 
-$this->title = 'My Yii Application';
+$this->title = 'Pronuntia - Desperate Colleagues';
 ?>
 
 <div class="jumbotron text-center bg-transparent">
