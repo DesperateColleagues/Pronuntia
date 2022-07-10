@@ -234,7 +234,7 @@ class EsercizioController extends \yii\web\Controller
         $this->layout = 'dashutn';
 
         $facade = new FacadeEsercizio();
-        $esercizi = $facade->getAllEserciziBySerie($nomeSerie);
+        $esercizi = $facade->getAllEserciziBySerie($nomeSerie,'a');
         $tipoEs = $facade->getTipologiaEsercizio($esercizi[$index]['esercizio']);
         $nomeEsercizio = $esercizi[$index]['esercizio'];
         $pathEsercizio = 'esercizi/' . $nomeEsercizio;
@@ -255,6 +255,17 @@ class EsercizioController extends \yii\web\Controller
         $shuffleSoluzioni = array_merge(array(), $soluzioni); // clonazione array soluzioni
         shuffle($shuffleSoluzioni);
 
+        $post = Yii::$app->request->post();
+        if (isset($post['saltaRisposta'])) {
+            if ($index < sizeof($esercizi) - 1) {
+                $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
+            } else {
+                $url = Url::toRoute(['esercizio/classificaview']);
+            }
+            $this->redirect($url);
+            $facade->setEsitoEsercizio($nomeEsercizio, $nomeSerie,false);
+        }   
+
         if ($tipoEs == 'abb') {
             $risposte = preg_split('{,}', Yii::$app->request->post('sort_list_1'));
             $esResult = $this->checkSoluzioni($soluzioni, $risposte);
@@ -265,18 +276,21 @@ class EsercizioController extends \yii\web\Controller
                         ->setFlash('danger', 'Risposta sbagliata! Bambino sei una testa di cazzo');
 
                     $facade->incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie);
+
+                    $facade->setEsitoEsercizio($nomeEsercizio, $nomeSerie,false);
                 } else {
                     if ($index < sizeof($esercizi) - 1) {
                         $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
                     } else {
                         $url = Url::toRoute(['esercizio/classificaview']);
                     }
+                    $facade->setEsitoEsercizio($nomeEsercizio, $nomeSerie,true);
 
                     $this->redirect($url);
                 }
             }
-        } else if ($tipoEs == 'par'){
-            if (Yii::$app->request->post('confermaRispostaLettura') !== null){
+        } else if ($tipoEs == 'par') {
+            if (Yii::$app->request->post('confermaRispostaLettura') !== null) {
 
                 if ($index < sizeof($esercizi) - 1) {
                     $url = Url::toRoute(['svolgimentoserieview', 'nomeSerie' => $nomeSerie, 'index' => $index + 1]);
@@ -295,19 +309,65 @@ class EsercizioController extends \yii\web\Controller
         ]);
     }
 
-    public function actionClassificaview(){
+    public function actionClassificaview()
+    {
         $facade = new FacadeEsercizio();
         return $this->render('classificaview', [
             'entries' => $facade->generaClassifica()
         ]);
     }
 
-    private function checkSoluzioni($soluzioni, $risposte){
-        for ($i = 0; $i < sizeof($soluzioni); $i++){
+    private function checkSoluzioni($soluzioni, $risposte)
+    {
+        for ($i = 0; $i < sizeof($soluzioni); $i++) {
             if ($soluzioni[$i] != $risposte[$i])
                 return false;
         }
 
         return true;
+    }
+
+    public function actionMonitoraggioeserciziview()
+    {
+        $facade = new FacadeEsercizio();
+
+        $post = Yii::$app->request->post();
+
+        $utenti = $facade->getAllUtenti();
+
+        if (isset($post['setUser'])) {
+            Yii::warning($post);
+
+            $serie = $facade->getSerieByUtente($post['listaUtenti']);
+
+            return $this->render('monitoraggioeserciziview', [
+                'tipoAttore' => 'log',
+                'utenti' => NULL,
+                'serie' => $serie,
+                'esercizi' => NULL
+            ]);
+        } else if (isset($post['setSerie'])) {
+            Yii::warning($post);
+
+            $nomeSerie = $post['listaSerie'];
+
+            $esercizi = $facade->getAllEserciziBySerie($nomeSerie,'d');
+
+            Yii::warning($esercizi);
+            
+            return $this->render('monitoraggioeserciziview', [
+                'tipoAttore' => 'log',
+                'utenti' => NULL,
+                'serie' => NULL,
+                'esercizi' => $esercizi
+            ]);
+        }
+
+        return $this->render('monitoraggioeserciziview', [
+            'tipoAttore' => 'log',
+            'utenti' => $utenti,
+            'serie' => NULL,
+            'esercizi' => NULL
+        ]);
     }
 }

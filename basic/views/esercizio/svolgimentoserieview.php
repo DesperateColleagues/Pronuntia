@@ -52,10 +52,15 @@ if ($tipologiaEsercizio == 'abb') {
     ]);
 
     echo '<br>';
-    echo Html::submitButton('Fine esercizio',
-        ['class' => 'btn btn-primary mr-2', 'name' => 'confermaRispostaAbbinamento']);
+    echo Html::submitButton(
+        'Fine esercizio',
+        ['class' => 'btn btn-primary mr-2', 'name' => 'confermaRispostaAbbinamento']
+    );
+    echo Html::submitButton(
+        'Salta esercizio',
+        ['class' => 'btn btn-primary mr-1',  'name' => 'saltaRisposta']
+    );
     echo Html::endForm();
-
 } else if ($tipologiaEsercizio == 'par') {
 
     echo "<table style = 'margin-left:auto;margin-right:auto'>";
@@ -71,7 +76,13 @@ if ($tipologiaEsercizio == 'abb') {
     echo '</table>';
 
     echo Html::beginForm();
-    echo Html::submitButton('Fine esercizio',
-        ['class' => 'btn btn-primary mr-2', 'name' => 'confermaRispostaLettura']);
+    echo Html::submitButton(
+        'Fine esercizio',
+        ['class' => 'btn btn-primary mr-2', 'name' => 'confermaRispostaLettura']
+    );
+    echo Html::submitButton(
+        'Salta esercizio',
+        ['class' => 'btn btn-primary mr-1',  'name' => 'saltaRisposta']
+    );
     echo Html::endForm();
 }

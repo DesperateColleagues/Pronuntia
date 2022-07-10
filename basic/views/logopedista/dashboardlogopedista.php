@@ -55,6 +55,6 @@ use yii\helpers\Html;
     <br><br>
     <div class="text-center">
         <h4>Monitoraggio svolgimento esercizi</h4>
-        <?php echo Html::a('Monitora gli utenti', ['monitoraggioterapialogopedistaview'], ['class' => 'btn btn-outline-primary']); ?>
+        <?php echo Html::a('Monitora gli utenti', ['/esercizio/monitoraggioeserciziview?tipoAttore=log'], ['class' => 'btn btn-outline-primary']); ?>
     </div>
 </div>
