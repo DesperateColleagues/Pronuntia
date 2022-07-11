@@ -273,7 +273,7 @@ class EsercizioController extends \yii\web\Controller
             if (!empty(Yii::$app->request->post())) {
                 if (!$esResult) {
                     Yii::$app->getSession()
-                        ->setFlash('danger', 'Risposta sbagliata! Bambino sei una testa di cazzo');
+                        ->setFlash('danger', 'Risposta sbagliata! Riprova');
 
                     $facade->incrementaTentativiEsercizio($nomeEsercizio, $nomeSerie);
 
@@ -312,19 +312,10 @@ class EsercizioController extends \yii\web\Controller
     public function actionClassificaview()
     {
         $facade = new FacadeEsercizio();
+
         return $this->render('classificaview', [
             'entries' => $facade->generaClassifica()
         ]);
-    }
-
-    private function checkSoluzioni($soluzioni, $risposte)
-    {
-        for ($i = 0; $i < sizeof($soluzioni); $i++) {
-            if ($soluzioni[$i] != $risposte[$i])
-                return false;
-        }
-
-        return true;
     }
 
     public function actionMonitoraggioeserciziview()
@@ -369,5 +360,15 @@ class EsercizioController extends \yii\web\Controller
             'serie' => NULL,
             'esercizi' => NULL
         ]);
+    }
+
+    private function checkSoluzioni($soluzioni, $risposte)
+    {
+        for ($i = 0; $i < sizeof($soluzioni); $i++) {
+            if ($soluzioni[$i] != $risposte[$i])
+                return false;
+        }
+
+        return true;
     }
 }

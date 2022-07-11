@@ -280,10 +280,11 @@ class FacadeEsercizio
     public function setEsitoEsercizio($nomeEsercizio, $nomeSerie, $value)
     {
         $model = ComposizioneserieModel::findOne(['serie' => $nomeSerie, 'esercizio' => $nomeEsercizio]);
-        if ($value == true)
+        if ($value)
             $model->esito = 1;
         else
             $model->esito = 0;
+
         return $model->save();
     }
 

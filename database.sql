@@ -74,8 +74,8 @@ CREATE TABLE IF NOT EXISTS serie (
 CREATE TABLE IF NOT EXISTS composizioneSerie(
 	serie VARCHAR(60),
     esercizio VARCHAR(255),
-    esito TINYINT(0),
     tentativi SMALLINT DEFAULT (0),
+    esito TINYINT(0),
     PRIMARY KEY (serie, esercizio),
     FOREIGN KEY (serie) REFERENCES serie(nomeSerie),
     FOREIGN KEY (esercizio) REFERENCES esercizio(nome)
@@ -88,8 +88,8 @@ SELECT * FROM esercizio;
 SELECT * FROM appuntamento;
 DELETE FROM esercizio WHERE nome = 'Es4';
 
-/*DROP TABLE utente;
+DROP TABLE utente;
 DROP TABLE caregiver;
 DROP TABLE logopedista;
 DROP TABLE serie;
-DROP TABLE composizioneSerie;*/
+DROP TABLE composizioneSerie;
