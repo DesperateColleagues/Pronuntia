@@ -23,41 +23,53 @@ use yii\grid\GridView;
 
     if ($tipoAttore == TipoAttore::LOGOPEDISTA) {
 
-        if ($utenti == NULL && $esercizi == NULL) {
+        if ($utenti == NULL && $esercizi == NULL && $serie != NULL) {
+
 
             $serie = $serie->getModels();
 
-            echo '<div>' . "Monitoraggio utenti di " . Yii::$app->user->getId() . '</div>';
+            if ($serie != NULL) {
 
-            echo "<br>";
+                echo '<div><h5>' . "Monitoraggio utenti di " . Yii::$app->user->getId() . '</h5></div>';
 
-            $serie = ArrayHelper::map($serie, 'nomeSerie', function ($par) {
-                return $par['nomeSerie'] . ' - Assegnata il: ' . $par['dataAssegnazione'];
-            });
+                echo "<br>";
 
-            echo '<div>' . Html::dropDownList('listaSerie', null, $serie) . '</div>';
+                $serie = ArrayHelper::map($serie, 'nomeSerie', function ($par) {
+                    return $par['nomeSerie'] . ' - Assegnata il: ' . $par['dataAssegnazione'];
+                });
 
-            echo "<br>";
+                echo '<div>' . Html::dropDownList('listaSerie', null, $serie) . '</div>';
 
-            echo Html::submitButton('Continua', ['class' => 'btn btn-primary mr-1',  'name' => 'setSerie']);
+                echo "<br>";
+
+                echo Html::submitButton('Continua', ['class' => 'btn btn-primary mr-1',  'name' => 'setSerie']);
+            } else {
+                echo '<div>Attualmente non risultano presenti serie assegnate a questo utente.</div>';
+                echo "<br>";
+            }
         } else if ($esercizi == NULL && $serie == NULL) {
 
-            echo '<div>' . "Monitoraggio utenti di " . Yii::$app->user->getId() . '</div>';
+            echo '<div><h5>' . "Monitoraggio utenti di " . Yii::$app->user->getId() . '</h5></div>';
 
             echo "<br>";
 
-            $utenti = ArrayHelper::map($utenti, 'username', function ($par) {
-                return $par['nome'] . ' ' . $par['cognome'] . ' - ' . $par['username'];
-            });
+            if ($utenti != NULL) {
 
-            echo '<div>' . Html::dropDownList('listaUtenti', null, $utenti) . '</div>';
+                $utenti = ArrayHelper::map($utenti, 'username', function ($par) {
+                    return $par['nome'] . ' ' . $par['cognome'] . ' - ' . $par['username'];
+                });
 
-            echo "<br>";
+                echo '<div>' . Html::dropDownList('listaUtenti', null, $utenti) . '</div>';
 
-            echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary mr-2']);
+                echo "<br>";
 
-            echo Html::submitButton('Continua', ['class' => 'btn btn-primary mr-1',  'name' => 'setUser']);
-        } else if ($utenti == NULL && $serie == NULL) {
+                echo Html::submitButton('Continua', ['class' => 'btn btn-primary mr-1',  'name' => 'setUser']);
+            } else {
+
+                echo '<div>Attualmente non risultano utenti a lei associati.</div>';
+                echo "<br>";
+            }
+        } else if ($esercizi != NULL && $serie == NULL) {
 
             echo GridView::widget([
                 'dataProvider' => $esercizi,
@@ -66,18 +78,74 @@ use yii\grid\GridView;
                     ['class' => 'yii\grid\SerialColumn'],
                     'serie',
                     'esercizio',
-                    'esito',
+                    [
+                        'attribute' => 'Esito',
+                        'filter' => false,
+                        'format' => 'raw',
+                        'value' => function ($esercizi) {
+                            if ($esercizi->esito > 0)
+                                return "Superato";
+                            else
+                                return "Non superato";
+                        },
+                    ],
                     'tentativi',
                 ],
             ]);
         }
+        echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary mr-2']);
 
         echo Html::endForm();
     } else if ($tipoAttore == TipoAttore::CAREGIVER) {
-        echo "Monitoraggio assistiti di " . $_COOKIE['caregiver'];
 
         echo "<br>";
 
+        if ($utenti == NULL && $esercizi == NULL && $serie != NULL) {
+
+            $serie = $serie->getModels();
+
+            if ($serie != NULL) {
+
+                echo '<div><h5>' . "Monitoraggio assistiti di " . $_COOKIE['caregiver'] . '</h5></div>';
+
+                echo "<br>";
+
+                $serie = ArrayHelper::map($serie, 'nomeSerie', function ($par) {
+                    return $par['nomeSerie'] . ' - Assegnata il: ' . $par['dataAssegnazione'];
+                });
+
+                echo '<div>' . Html::dropDownList('listaSerie', null, $serie) . '</div>';
+
+                echo "<br>";
+
+                echo Html::submitButton('Continua', ['class' => 'btn btn-primary mr-1',  'name' => 'setSerie']);
+            } else {
+                echo '<div>Attualmente non risultano presenti serie assegnate ai suoi assistiti.</div>';
+                echo "<br>";
+            }
+        } else {
+
+            echo GridView::widget([
+                'dataProvider' => $esercizi,
+                'columns' => [
+                    ['class' => 'yii\grid\SerialColumn'],
+                    'serie',
+                    'esercizio',
+                    [
+                        'attribute' => 'Esito',
+                        'filter' => false,
+                        'format' => 'raw',
+                        'value' => function ($esercizi) {
+                            if ($esercizi->esito > 0)
+                                return "Superato";
+                            else
+                                return "Non superato";
+                        },
+                    ],
+                    'tentativi',
+                ],
+            ]);
+        }
         echo Html::a('Torna alla dashboard', ['/caregiver/dashboardcaregiver'], ['class' => 'btn btn-outline-secondary mr-2']);
     }
     ?>
