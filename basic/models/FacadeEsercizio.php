@@ -97,6 +97,11 @@ class FacadeEsercizio
         );
     }
 
+    public function getUtenteByCaregiver($caregiverMail){
+        $modelCaregiver = new CaregiverModel();
+        return $modelCaregiver->getUserByEmail($caregiverMail);
+    }
+
     /**
      * Restituisce le tuple delle serie corrispondenti allo username passato in input
      *
