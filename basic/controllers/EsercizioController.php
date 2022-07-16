@@ -28,116 +28,154 @@ class EsercizioController extends \yii\web\Controller
 
         $post = Yii::$app->request->post(); // recupera il post
 
-        if ($tipologiaEsercizio == 'let') {
+        /**
+         * Si controlla se l'end-button è settato, al di fuori della ramificazione if-else principale
+         * in quanto esso è presente in un'altro form. Questo form si attiva all'interno della creazione di esercizi di
+         * abbinamento. Pertanto il bottone verrà settato SOLTANTO AL TERMINE della creazione di un esercizio di
+         * abbinamento.
+         *
+         * Questo controllo è dovuto al fatto che è necessario controllare il momento preciso in cui
+         * si inserisce la tupla di esercizio di abbinamento nel DB.
+        */
+        if (isset($post['end-button'])) {
+            $nomeEsercizio = $_COOKIE['nomeEsercizio'];
+            // salva l'esercizio di abbinamento sul database
+            $isSaved = $facadeEsercizio->salvaEsercizio(
+                $nomeEsercizio, // nome esercizio
+                $tipologiaEsercizio, // tipologia
+                "esercizi/$nomeEsercizio", // path esercizio di abbinamento
+                null, // testo esercizio (null se è esercizio di abbinamento)
+                Yii::$app->user->getId() // email logopedista
+            );
 
-            if (!empty($post)) {
-                $isSaved = $facadeEsercizio->salvaEsercizio(
-                    $post['EsercizioModel']['nome'], // nome esercizio
-                    $tipologiaEsercizio, // tipologia
-                    null,
-                    $post['EsercizioModel']['testo'], // testo esercizio (null se è esercizio di abbinamento)
-                    Yii::$app->user->getId() // email logopedista
-                );
-
-                if ($isSaved) {
-                    Yii::error("Model salvato");
-                }
+            if (!$isSaved) {
+                Yii::$app->getSession()->setFlash('danger',
+                    'Sono stati commessi errori nella procedura di inserimento');
             }
 
-            return $this->render(
-                'creaesercizioview',
-                [
-                    'tipologiaEsercizio' => $tipologiaEsercizio,
-                    'nomeEsercizio' => null,
-                    'model' => null,
-                    'nPic' => NULL
-                ]
-            );
-        } else if ($tipologiaEsercizio == 'abb') {
+        } else { // flusso dic controllo principale
+            if ($tipologiaEsercizio == 'let') {
 
-            // istanzia il model e restituisce il nome dell'esercizio
-            $nomeEsercizio = $facadeEsercizio->getNomeEsercizio($post);
-
-            if (isset($post['confirm-button'])) {
-                // crea l'esercizio sul database attraverso la facade senza accedere direttamente al model
-                $isSaved = $facadeEsercizio->salvaEsercizio(
-                    $nomeEsercizio, // nome esercizio
-                    $tipologiaEsercizio, // tipologia
-                    "esercizi/$nomeEsercizio", // path esercizio di abbinamento
-                    null, // testo esercizio (null se è esercizio di abbinamento)
-                    Yii::$app->user->getId() // email logopedista
-                );
-
-                if ($isSaved) {
-                    return $this->render(
-                        'creaesercizioview',
-                        [
-                            'tipologiaEsercizio' => $tipologiaEsercizio,
-                            'nomeEsercizio' => $nomeEsercizio,
-                            'model' => new ImmagineEsercizioModel(),
-                            'nPic' => NULL
-                        ]
+                if (!empty($post)) {
+                    $isSaved = $facadeEsercizio->salvaEsercizio(
+                        $post['EsercizioModel']['nome'], // nome esercizio
+                        $tipologiaEsercizio, // tipologia
+                        null,
+                        $post['EsercizioModel']['testo'], // testo esercizio (null se è esercizio di abbinamento)
+                        Yii::$app->user->getId() // email logopedista
                     );
-                } else {
-                    Yii::$app->getSession()->setFlash('danger', 'Nome esercizio già esistente!');
+
+                    if ($isSaved) {
+                        Yii::error("Model salvato");
+                    }
                 }
-            } else if (isset($post['continue-button'])) {
-                $facadeEsercizio->aggiungiImmagineDaForm();
-
-                Yii::$app->getSession()->setFlash('success', 'Inserimento completato');
-
-                $nPic = sizeof(scandir("esercizi/$nomeEsercizio")) - 2;
 
                 return $this->render(
                     'creaesercizioview',
                     [
                         'tipologiaEsercizio' => $tipologiaEsercizio,
-                        'nomeEsercizio' => $nomeEsercizio,
-                        'model' => new ImmagineEsercizioModel(),
-                        'nPic' => $nPic
+                        'nomeEsercizio' => null,
+                        'model' => null,
+                        'nPic' => null
                     ]
                 );
-            }
-        } else if ($tipologiaEsercizio == 'par') {
+            } else if ($tipologiaEsercizio == 'abb') {
 
-            if (!empty($post)) {
+                if (!empty($post)) {
+                    // recupera il nome dell'esercizio
+                    $nomeEsercizio = $post['ImmagineEsercizioModel']['nomeEsercizio'];
 
-                $nomeEsercizio = $facadeEsercizio->getNomeEsercizio($post);
+                    if (isset($post['confirm-button'])) {
+                        // aggiorna la view di creazione esercizi
+                        if ($facadeEsercizio->checkNomeEsercizio($nomeEsercizio)) {
+                            // crea la directory dove memorizzare gli esercizi
+                            $facadeEsercizio->creaDirectory($nomeEsercizio);
+                            /*  setta un cookie che contiene il nome dell'esercizio. Questo valore verrà recuperato
+                                solo se è settato end-buttton*/
+                            setcookie('nomeEsercizio', $nomeEsercizio, 0, "/");
 
-                $isSaved = $facadeEsercizio->salvaEsercizio(
-                    $nomeEsercizio, // nome esercizio
-                    $tipologiaEsercizio, // tipologia
-                    "esercizi/$nomeEsercizio",
-                    $post['ImmagineEsercizioModel']['nomeImmagine'], // testo esercizio (null se è esercizio di abbinamento)
-                    Yii::$app->user->getId() // email logopedista
-                );
+                            return $this->render(
+                                'creaesercizioview',
+                                [
+                                    'tipologiaEsercizio' => $tipologiaEsercizio,
+                                    'nomeEsercizio' => $nomeEsercizio,
+                                    'model' => new ImmagineEsercizioModel(),
+                                    'nPic' => null
+                                ]
+                            );
+                        } else {
+                            Yii::$app->getSession()->setFlash('danger',
+                                'Nome esercizio esistente: impossibile continuare');
+                        }
+                    } else if (isset($post['continue-button'])) {
+                        Yii::$app->getSession()->setFlash('success', 'Inserimento completato');
+                        $facadeEsercizio->aggiungiImmagineDaForm($post); // aggiunge l'immagine dal form nella cartella
 
-                if ($isSaved) {
-                    Yii::$app->getSession()->setFlash('success', 'Inserimento andato a buon fine!');
-                    $facadeEsercizio->aggiungiImmagineDaForm();
-                } else {
-                    Yii::$app->getSession()->setFlash('danger', 'Inserimento fallito!');
+                        // recupera il numero di immagini inserite dalla cartella
+                        $nPic = sizeof(scandir("esercizi/$nomeEsercizio")) - 2;
+
+                        // se si arriva al numero massimo di immagini caricabili, viene effettuato il salvataggio su db
+                        if ($nPic == 4){
+                            $facadeEsercizio->salvaEsercizio(
+                                $nomeEsercizio, // nome esercizio
+                                $tipologiaEsercizio, // tipologia
+                                "esercizi/$nomeEsercizio", // path esercizio di abbinamento
+                                null, // testo esercizio (null se è esercizio di abbinamento)
+                                Yii::$app->user->getId() // email logopedista
+                            );
+                        }
+
+                        return $this->render(
+                            'creaesercizioview',
+                            [
+                                'tipologiaEsercizio' => $tipologiaEsercizio,
+                                'nomeEsercizio' => $nomeEsercizio,
+                                'model' => new ImmagineEsercizioModel(),
+                                'nPic' => $nPic
+                            ]
+                        );
+
+                    }
+                }
+            } else if ($tipologiaEsercizio == 'par') {
+
+                if (!empty($post)) {
+                    $nomeEsercizio = $post['ImmagineEsercizioModel']['nomeEsercizio'];
+
+                    if ($facadeEsercizio->checkNomeEsercizio($nomeEsercizio)) {
+                        $isSaved = $facadeEsercizio->salvaEsercizio(
+                            $nomeEsercizio, // nome esercizio
+                            $tipologiaEsercizio, // tipologia
+                            "esercizi/$nomeEsercizio",
+                            $post['ImmagineEsercizioModel']['nomeImmagine'], // il testo corrisponde al nome dell'immagine
+                            Yii::$app->user->getId() // email logopedista
+                        );
+
+                        if ($isSaved) {
+                            Yii::$app->getSession()->setFlash('success', 'Inserimento andato a buon fine!');
+                            // crea la directory dove memorizzare gli esercizi
+                            $facadeEsercizio->creaDirectory($nomeEsercizio);
+                            // aggiunge l'immagine dal form nella cartella
+                            $facadeEsercizio->aggiungiImmagineDaForm($post);
+                        } else {
+                            Yii::$app->getSession()->setFlash('danger', 'Inserimento fallito!');
+                        }
+                    } else {
+                        Yii::$app->getSession()->setFlash('danger',
+                            'Nome esercizio esistente: impossibile continuare');
+                    }
                 }
             }
-
-            return $this->render(
-                'creaesercizioview',
-                [
-                    'tipologiaEsercizio' => $tipologiaEsercizio,
-                    'nomeEsercizio' => null,
-                    'model' => new ImmagineEsercizioModel(),
-                    'nPic' => NULL
-                ]
-            );
         }
 
+        // render di default
         return $this->render(
             'creaesercizioview',
             [
                 'tipologiaEsercizio' => $tipologiaEsercizio,
                 'nomeEsercizio' => null,
                 'model' => new ImmagineEsercizioModel(),
-                'nPic' => NULL
+                'nPic' => null
             ]
         );
     }
