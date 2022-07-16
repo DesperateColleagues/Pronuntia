@@ -17,24 +17,30 @@ class FacadeEsercizio
     /**
      * Istanzia il model del form e restituisce il nome dell'esercizio
      *
-     * @param array $imgModelPar array post
+     * @param string $nomeEsercizio nome dell'esercizio
      *
-     * @return string nome dell'esercizio
+     * @return bool indica se il nome dell'esercizio esiste o meno
      */
-    public function getNomeEsercizio($imgModelPar)
+    public function checkNomeEsercizio($nomeEsercizio)
     {
-        $this->iem = new ImmagineEsercizioModel();
-        $this->iem->load($imgModelPar);
 
-        return $this->iem->nomeEsercizio;
+        $res = EsercizioModel::findAll(['nome' => $nomeEsercizio]);
+
+        if (empty($res))
+            return true;
+        else
+            return false;
     }
 
     /**
      * Aggiunge un immagine per l'esercizio di abbinamento
      *
      */
-    public function aggiungiImmagineDaForm()
+    public function aggiungiImmagineDaForm($post)
     {
+        $this->iem = new ImmagineEsercizioModel();
+        $this->iem->load($post);
+
         $file = UploadedFile::getInstance($this->iem, 'file');
         $file->saveAs('esercizi/' . $this->iem->nomeEsercizio . '/' . $this->iem->nomeImmagine . '.jpg');
     }
@@ -53,20 +59,15 @@ class FacadeEsercizio
     public function salvaEsercizio($nome, $tipologiaEsercizio, $path, $testo, $logopedista)
     {
 
-        // salva il record solo se la directory viene creata
-        if ($this->creaDirectory($nome)) {
-            $model = new EsercizioModel();
+        $model = new EsercizioModel();
 
-            $model->nome = $nome;
-            $model->tipologia = $tipologiaEsercizio;
-            $model->path = $path;
-            $model->testo = $testo;
-            $model->logopedista = $logopedista;
+        $model->nome = $nome;
+        $model->tipologia = $tipologiaEsercizio;
+        $model->path = $path;
+        $model->testo = $testo;
+        $model->logopedista = $logopedista;
 
-            return $model->save();
-        } else {
-            return false;
-        }
+        return $model->save();
     }
 
     /**
@@ -138,7 +139,7 @@ class FacadeEsercizio
     /**
      * Restituisce tutti gli esercizi della serie passata in input tramite il nome
      *
-     * @return array gli esercizi interni alla serie
+     * @return array|object[]|string[]|ActiveDataProvider
      */
     public function getAllEserciziBySerie($nomeSerie,$mode)
     {
@@ -245,7 +246,7 @@ class FacadeEsercizio
      *
      * @return bool indica se la directory è stata creata o meno
      */
-    private function creaDirectory($nomeDir)
+    public function creaDirectory($nomeDir)
     {
         $path = realpath("esercizi/$nomeDir");
         $ret = false;

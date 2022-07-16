@@ -88,8 +88,9 @@ SELECT * FROM esercizio;
 SELECT * FROM appuntamento;
 DELETE FROM esercizio WHERE nome = 'Es4';
 
-DROP TABLE utente;
+/*DROP TABLE utente;
 DROP TABLE caregiver;
 DROP TABLE logopedista;
 DROP TABLE serie;
 DROP TABLE composizioneSerie;
+
