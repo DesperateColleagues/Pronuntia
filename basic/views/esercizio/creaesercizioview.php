@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model ImmagineEsercizioModel */
-/* @var nPic int */
+/* @var $nPic int */
 /* @var $tipologiaEsercizio string */
 /* @var $nomeEsercizio string */
 
@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
         if ($nomeEsercizio == null) {
             echo $form->field($model, 'nomeEsercizio')->textInput()->label('Nome esercizio di abbinamento');
             echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'confirm-button']);
+            ActiveForm::end();
+
         } else if ($nPic < 4) {
             echo '<p>';
             echo '<li>Premere il bottone <b>Continua inserimento</b> per inserire le immagini</li>';
@@ -39,9 +41,18 @@ $this->params['breadcrumbs'][] = $this->title;
             echo "<p> Stai inserendo l'immagine numero: ".($nPic+1)."</p>";
 
             echo Html::submitButton('Continua inserimento', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
+            ActiveForm::end();
+
+            if ($nPic >= 2) {
+                echo Html::beginForm();
+                echo '<br>';
+                echo Html::submitButton('Termina inserimento', ['class' => 'btn btn-primary mr-1', 'name' => 'end-button']);
+                echo Html::endForm();
+            }
         } else {
             Yii::$app->getSession()->setFlash('success', 'Inserimento completato');
             Yii::$app->getSession()->setFlash('danger', 'Numero massimo di immagini caricabili raggiunto');
+            echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore='.'log'], ['class' => 'btn btn-outline-secondary']);
         }
     } else if ($tipologiaEsercizio == 'let') {
 
@@ -60,6 +71,8 @@ $this->params['breadcrumbs'][] = $this->title;
         echo $hiddenFieldTipologia;
 
         echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
+        ActiveForm::end();
+
     } else if ($tipologiaEsercizio == 'par') {
 
         $esModel = new EsercizioModel();
@@ -78,15 +91,8 @@ $this->params['breadcrumbs'][] = $this->title;
         echo $hiddenFieldTipologia;
 
         echo Html::submitButton('Conferma', ['class' => 'btn btn-primary mr-1',  'name' => 'continue-button']);
+        ActiveForm::end();
     }
-    ?>
-
-    <?php ActiveForm::end(); ?>
-
-
-    <?php
-    echo '<br>';
-    echo Html::a('Torna alla dashboard', ['/logopedista/dashboardlogopedista?tipoAttore=log'], ['class' => 'btn btn-outline-secondary']);
     ?>
 
 </div>
